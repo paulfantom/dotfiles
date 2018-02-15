@@ -1,0 +1,84 @@
+function play() { qdbus org.mpris.MediaPlayer2.$1 /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play ; }
+function pause() { qdbus org.mpris.MediaPlayer2.$1 /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause ; }
+function movie() {
+  vlc-fullscreen || return 1
+  qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl setBrightness 0
+  yakuake-retract
+  pause spotify &>/dev/null
+  play vlc
+  ambilight movie vlc
+  qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl setBrightness `qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl brightnessMax`
+}
+
+function yt() {
+  mkdir -p $HOME/Downloads/accantus
+  cd $HOME/Downloads/accantus
+  youtube-dl -x --audio-quality 0 --audio-format mp3 "$1"
+  [ -z "$2" ] && ( echo "when it finishes?"; read LEN ) || LEN="$2"
+  NAME=`ls`
+  ffmpeg -i $NAME -t $(( ${LEN%:*} * 60 + ${LEN#*:} )) -acodec copy youtube.mp3
+  rm -f $NAME
+  picard youtube.mp3
+}
+
+weather() {
+  curl "wttr.in/$1"
+}
+
+lights_off() {
+  if [ -z "$1" ]; then
+    sleep 5
+  else
+    sleep "$1"
+  fi
+  xset dpms force off
+  ambilight off
+}
+
+caps() {
+  if [ "$1" == "on" ]; then
+    sudo sh -c "setleds -D +caps < /dev/console"
+  else
+    sudo sh -c "setleds -D -caps < /dev/console"
+  fi
+}
+
+new-alias() {
+  local last_command=$(echo `history |tail -n2 |head -n1` | sed 's/[0-9]* //')
+  echo alias $1="'""$last_command""'" >> ~/.new_aliases
+  . ~/.new_aliases
+}
+
+man() {
+  env \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+  man "$@"
+}
+
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2) tar xvjf $1;;
+            *.tar.gz) tar xvzf $1;;
+            *.bz2) bunzip2 $1;;
+            *.rar) unrar x $1;;
+            *.gz) gunzip $1;;
+            *.tar) tar xvf $1;;
+            *.tbz2) tar xvjf $1;;
+            *.tgz) tar xvzf $1;;
+            *.zip) unzip $1;;
+            *.Z) uncompress $1;;
+            *.7z) 7za x $1;;
+            *.rar) unrar $1;;
+            *) echo "'$1' cannot be extracted via >extract<" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
