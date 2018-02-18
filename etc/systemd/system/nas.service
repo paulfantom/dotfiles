@@ -1,0 +1,11 @@
+[Unit]
+Description=Umount NAS
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+ExecStart=/bin/bash /etc/NetworkManager/dispatcher.d/99-nas wlp2s0 down 
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

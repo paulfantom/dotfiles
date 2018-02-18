@@ -82,3 +82,13 @@ extract () {
         echo "'$1' is not a valid file"
     fi
 }
+
+checkkernel() {
+    MSG="\e[1m\e[5m\e[31mALERT! \e[25mReboot system to apply crucial security updates.\e[0m"
+    if [ -f /var/run/reboot-required ]; then
+        echo -e "$MSG"
+    fi
+    if [ $(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1) != $(uname -r) ]; then
+        echo -e "$MSG"
+    fi
+}
