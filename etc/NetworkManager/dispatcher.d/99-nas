@@ -5,7 +5,7 @@ STATUS="$2"
 ESSID="Now you see me"
 
 if [ "$IF" == "wlan0" ]; then
-  case "$2" in
+  case "$STATUS" in
   up)
     if iwgetid | grep -qs ":\"$ESSID\""; then
       mount nas.ankhmorpork:/srv/tv /mnt/nas/tv 
