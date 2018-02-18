@@ -1,0 +1,28 @@
+#!/bin/bash
+
+IF="$1"
+STATUS="$2"
+ESSID="Now you see me"
+
+if [ "$IF" == "wlan0" ]; then
+  case "$2" in
+  up)
+    if iwgetid | grep -qs ":\"$ESSID\""; then
+      mount nas.ankhmorpork:/srv/tv /mnt/nas/tv 
+      mount nas.ankhmorpork:/srv/pictures /mnt/nas/pictures
+      mount nas.ankhmorpork:/srv/downloads /mnt/nas/downloads
+      mount nas.ankhmorpork:/srv/movies /mnt/nas/movies
+      mount nas.ankhmorpork:/srv/videos /mnt/nas/videos
+    fi
+    ;;
+  down|pre-down)
+    umount -lf /mnt/nas/tv
+    umount -lf /mnt/nas/pictures
+    umount -lf /mnt/nas/downloads
+    umount -lf /mnt/nas/movies
+    umount -lf /mnt/nas/videos
+    ;;
+  esac
+fi
+
+exit 0
