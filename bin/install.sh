@@ -93,6 +93,24 @@ base_min() {
 }
 
 base() {
+    ANS="N"
+    read -t 30 -r -p "Do you want to remove KDE bloatware? [Y]es/[N]o" -n 1 ANS
+    if [[ "$ANS" =~ Y|y ]]; then
+        dnf remove -y \
+        akregator \
+        amarok \
+        dragonplayer \
+        kcalendar \
+        kget \
+        kmail \
+        kontact \
+        korganizer \
+        ktp-* \
+        kwrite \
+        mariadb \
+        mariadb-*
+    fi
+
     base_min
     dnf install -y \
         bridge-utils \
@@ -115,25 +133,6 @@ base() {
         xmodmap \
         yakuake
     
-    echo "Do you want to remove KDE bloatware? [Y]es/[N]o"
-    ANS="N"
-    read -r -n 1 ANS
-    if [[ "$ANS" =~ Y|y ]]; then
-        dnf remove -y \
-        akregator \
-        amarok \
-        dragonplayer \
-        kcalendar \
-        kget \
-        kmail \
-        kontact \
-        korganizer \
-        ktp-* \
-        kwrite \
-        mariadb \
-        mariadb-*
-    fi
-
     setup_sudo
 
     install_python
@@ -159,7 +158,7 @@ install_scripts() {
 
 install_docker() {
     dnf install -y docker-ce
-    sudo gpasswd -a "$TARGET_USER" docker
+    gpasswd -a "$TARGET_USER" docker
     systemctl enable docker
 
     command -v foo >/dev/null 2>&1 && pip install docker-compose
@@ -191,15 +190,23 @@ install_ansible() {
 }
 
 install_vagrant() {
-    echo
+    echo "TODO: install virtualbox and vagrant"
 }
 
 install_libvirt() {
-    echo
+    dnf install -y \
+        libvirt-client \
+        libvirt-daemon \
+        libvirt-daemon-kvm \
+        virt-install \
+        virt-manager
+
+    gpasswd -a "$TARGET_USER" libvirt
+    systemctl enable libvirt
 }
 
 install_golang() {
-    echo "Will do it in the future"
+    echo "TODO: install golang"
 }
 
 get_dotfiles() {
@@ -227,7 +234,7 @@ get_dotfiles() {
 
 setup_sudo() {
     # add user to sudoers
-    usermod -aG wheel "$TARGET_USER"
+    gpasswd -a "$TARGET_USER" wheel
     
     # add user to systemd groups
     # then you wont need sudo to view logs and shit
@@ -283,14 +290,19 @@ main() {
     elif [[ $cmd == "golang" ]]; then
         install_golang "$2"
     elif [[ $cmd == "ansible" ]]; then
+        check_is_sudo
         install_ansible "$2"
     elif [[ $cmd == "scripts" ]]; then
+        check_is_sudo
         install_scripts
     elif [[ $cmd == "libvirt" ]]; then
+        check_is_sudo
     	install_libvirt
     elif [[ $cmd == "vagrant" ]]; then
+        check_is_sudo
         install_vagrant "$2"
     elif [[ $cmd == "downloads" ]]; then
+        check_is_sudo
         tmpfs_downloads
     else
         usage
