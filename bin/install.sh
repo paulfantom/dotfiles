@@ -94,7 +94,7 @@ base_min() {
 
 base() {
     ANS="N"
-    read -t 30 -r -p "Do you want to remove KDE bloatware? [Y]es/[N]o  " -n 1 ANS
+    read -t 30 -r -p "Do you want to remove KDE bloatware? [Y]es/[N]o  " -n 1 ANS || :
     if [[ "$ANS" =~ Y|y ]]; then
         dnf remove -y \
         akregator \
