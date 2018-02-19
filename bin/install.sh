@@ -202,7 +202,7 @@ install_libvirt() {
         virt-manager
 
     gpasswd -a "$TARGET_USER" libvirt
-    systemctl enable libvirt
+    systemctl enable libvirtd
 }
 
 install_golang() {
