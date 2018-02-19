@@ -45,6 +45,7 @@ etc: ## Installs the etc directory files.
 		f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
 		sudo ln -f $$file $$f; \
 		sudo chown root:root $$f; \
+		sudo restorecon -FvR $$f; \
 	done
 	systemctl --user daemon-reload || true
 	sudo systemctl daemon-reload
