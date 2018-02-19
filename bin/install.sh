@@ -158,6 +158,7 @@ base() {
         bridge-utils \
         kate \
         keepassxc \
+        latte-dock \
         libreoffice \
         nextcloud-client \
         nextcloud-client-dolphin \
@@ -281,7 +282,7 @@ get_dotfiles() {
     mkdir -p "${USERHOME}/Development"
 
     # install dotfiles from repo
-    git clone https://github.com/paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles"
+    git clone https://github.com/paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles" || :
     #git clone git@github.com:paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles"
     cd "${USERHOME}/Development/dotfiles"
     git pull
