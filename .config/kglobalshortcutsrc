@@ -15,14 +15,6 @@ Toggle Keyboard Backlight=Keyboard Light On/Off,Keyboard Light On/Off,Toggle Key
 _k_friendly_name=Power Management
 display=Display\tMeta+P,Display\tMeta+P,Switch Display
 
-[khotkeys]
-_k_friendly_name=KDE Daemon
-{124769b8-be18-420e-91fb-4648c69aa795}=Print,none,Start Screenshot Tool
-{39dd1900-2f49-4e70-8889-981669d59cae}=Meta+Shift+Print,none,Take Rectangular Region Screenshot
-{914f8294-bdc1-4495-ad47-02bf74b50119}=Meta+Print,none,Take Active Window Screenshot
-{d03619b6-9b3c-48cc-9d9c-a2aadb485550}=,none,Search
-{f8456bbe-58ef-49ce-a9e1-92912183ab32}=Shift+Print,none,Take Full Screen Screenshot
-
 [kmix]
 _k_friendly_name=Audio Volume
 decrease_microphone_volume=Microphone Volume Down,Microphone Volume Down,Decrease Microphone Volume
