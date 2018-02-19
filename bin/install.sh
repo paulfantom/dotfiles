@@ -168,7 +168,7 @@ base() {
     echo "Do you want to remove KDE bloatware? [Y]es/[N]o"
     ANS="N"
     read -r -n 1 ANS
-    if [[ "$ANS" =~ "Y|y" ]]; then
+    if [[ "$ANS" =~ Y|y ]]; then
         dnf remove -y \
         akregator \
         amarok \
@@ -262,6 +262,10 @@ install_golang() {
 }
 
 get_dotfiles() {
+    if [ "${TARGET_USER}" == "root" ]; then
+        echo "Don't run this as root"
+        exit 1
+    fi
     # create subshell
     (
     USERHOME="/home/${TARGET_USER}"
