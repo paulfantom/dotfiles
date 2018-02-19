@@ -243,9 +243,8 @@ install_ansible() {
 	ANSIBLE="ansible"
     fi
 
-    if [ "$(which pip)" -ne 0 ]; then
-        install_python
-    fi
+    command -v foo >/dev/null 2>&1 || install_python
+
     pip install \
     	"$ANSIBLE" \
         molecule==1.25.1 \
