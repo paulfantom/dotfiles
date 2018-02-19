@@ -159,6 +159,8 @@ base() {
         kate \
         keepassxc \
         libreoffice \
+        nextcloud-client \
+        nextcloud-client-dolphin \
         pavucontrol \
         powerline \
         powerline-fonts \
@@ -318,7 +320,7 @@ downloads_tmpfs() {
 }
 
 usage() {
-    echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
+    echo -e "install.sh\\n\\tThis script installs my basic setup for a fedora laptop\\n"
     echo "Usage:"
     echo "  base                                - setup sources & install base pkgs"
     echo "  dotfiles                            - get dotfiles"
