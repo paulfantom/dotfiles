@@ -161,7 +161,7 @@ install_docker() {
     gpasswd -a "$TARGET_USER" docker
     systemctl enable docker
 
-    command -v foo >/dev/null 2>&1 && pip install docker-compose
+    command -v pip >/dev/null 2>&1 && pip install docker-compose
 }
 
 install_python() {
@@ -181,7 +181,7 @@ install_ansible() {
 	ANSIBLE="ansible"
     fi
 
-    command -v foo >/dev/null 2>&1 || install_python
+    command -v pip >/dev/null 2>&1 || install_python
 
     pip install \
     	"$ANSIBLE" \
