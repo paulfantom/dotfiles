@@ -108,6 +108,7 @@ base() {
         powertop \
         spotify \
         tlp \
+        vim-powerline \
         vivaldi-stable \
         vlc \
         xbindkeys \
@@ -197,12 +198,6 @@ install_libvirt() {
     echo
 }
 
-install_vim() {
-    dnf install -y \
-    	vim \
-        vim-powerline
-}
-
 install_golang() {
     echo "Will do it in the future"
 }
@@ -228,8 +223,6 @@ get_dotfiles() {
     # install all the things
     make   
     )
-    
-    install_vim    
 }
 
 setup_sudo() {
@@ -263,7 +256,6 @@ usage() {
     echo "Usage:"
     echo "  base                                - setup sources & install base pkgs"
     echo "  dotfiles                            - get dotfiles"
-    echo "  vim                                 - install vim specific dotfiles"
     echo "  golang                              - install golang and packages"
     echo "  ansible                             - install ansible and packages"
     echo "  scripts                             - install scripts"
@@ -288,8 +280,6 @@ main() {
     elif [[ $cmd == "dotfiles" ]]; then
         get_user
         get_dotfiles
-    elif [[ $cmd == "vim" ]]; then
-        install_vim
     elif [[ $cmd == "golang" ]]; then
         install_golang "$2"
     elif [[ $cmd == "ansible" ]]; then
