@@ -134,6 +134,7 @@ base_min() {
         htop \
         lsof \
         make \
+        mtr \
         nmap \
         pbzip2 \
         pigz \
@@ -150,15 +151,38 @@ base() {
     base_min
     dnf install -y \
     	bridge-utils \
+    	kate \
+    	libreoffice \
+    	pavucontrol \
         powerline \
         powerline-fonts \
         powertop \
     	spotify \
     	tlp \
     	vivaldi \
+    	vlc \
     	xbindkeys \
         xmodmap \
         yakuake
+    
+    echo "Do you want to remove KDE bloatware? [Y]es/[N]o"
+    ANS="N"
+    read -r -n 1 ANS
+    if [[ "$ANS" =~ "Y|y" ]]; then
+        dnf remove -y \
+        akregator \
+        amarok \
+        dragonplayer \
+        kcalendar \
+        kget \
+        kmail \
+        kontact \
+        korganizer \
+        ktp-* \
+        kwrite \
+        mariadb \
+        mariadb-*
+    fi
 
     setup_sudo
 
