@@ -150,18 +150,18 @@ base_min() {
 base() {
     base_min
     dnf install -y \
-    	bridge-utils \
-    	kate \
-    	libreoffice \
-    	pavucontrol \
+        bridge-utils \
+        kate \
+        libreoffice \
+        pavucontrol \
         powerline \
         powerline-fonts \
         powertop \
-    	spotify \
-    	tlp \
-    	vivaldi \
-    	vlc \
-    	xbindkeys \
+        spotify \
+        tlp \
+        vivaldi \
+        vlc \
+        xbindkeys \
         xmodmap \
         yakuake
     
