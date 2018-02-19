@@ -27,7 +27,7 @@ dotfiles: ## Installs the dotfiles.
 .PHONY: kde
 kde: ## Installs the KDE configuration.
 	for file in $(shell find $(CURDIR)/.config -name "*"); do \
-		f=$$(basename $$file); \
+		f=$$(echo $$file | sed -e 's|$(CURDIR)\/||'); \
 		ln -sfn $$file $(HOME)/$$f; \
 	done
 
