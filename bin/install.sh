@@ -40,66 +40,6 @@ setup_repos() {
        "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
        "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
-#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free.repo
-#	[rpmfusion-free]
-#	name=RPM Fusion for Fedora \$releasever - Free
-#	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-\$releasever&arch=\$basearch
-#	enabled=1
-#	metadata_expire=14d
-#	type=rpm-md
-#	gpgcheck=1
-#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
-#	EOF
-#
-#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free-updates.repo
-#	[rpmfusion-free-updates]
-#	name=RPM Fusion for Fedora \$releasever - Free - Updates
-#	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-released-\$releasever&arch=\$basearch
-#	enabled=1
-#	type=rpm-md
-#	gpgcheck=1
-#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
-#	EOF
-#
-#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free-updates-testing.repo
-#	[rpmfusion-free-updates-testing]
-#	name=RPM Fusion for Fedora \$releasever - Free - Test Updates
-#	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-testing-\$releasever&arch=\$basearch
-#	enabled = 0
-#	gpgcheck=1
-#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
-#	EOF
-#
-#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree.repo
-#	[rpmfusion-nonfree]
-#	name=RPM Fusion for Fedora \$releasever - Nonfree
-#	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-\$releasever&arch=\$basearch
-#	enabled=1
-#	metadata_expire=14d
-#	type=rpm-md
-#	gpgcheck=1
-#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
-#	EOF
-#
-#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree-updates.repo
-#	[rpmfusion-nonfree-updates]
-#	name=RPM Fusion for Fedora \$releasever - Nonfree - Updates
-#	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-updates-released-\$releasever&arch=\$basearch
-#	enabled=1
-#	type=rpm-md
-#	gpgcheck=1
-#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
-#	EOF
-#
-#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree-updates-testing.repo
-#	[rpmfusion-nonfree-updates-testing]
-#	name=RPM Fusion for Fedora \$releasever - Nonfree - Test Updates
-#	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-updates-testing-\$releasever&arch=\$basearch
-#	enabled = 0
-#	gpgcheck=1
-#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
-#	EOF
-
    cat <<-EOF > /etc/yum.repos.d/negativo-spotify.repo
 	[negativo-spotify]
 	baseurl = http://negativo17.org/repos/spotify/fedora-\$releasever/\$basearch
@@ -168,7 +108,7 @@ base() {
         powertop \
         spotify \
         tlp \
-        vivaldi \
+        vivaldi-stable \
         vlc \
         xbindkeys \
         xmodmap \
@@ -221,9 +161,7 @@ install_docker() {
     sudo gpasswd -a "$TARGET_USER" docker
     systemctl enable docker
 
-    if [ "$(which pip)" ]; then
-        pip install docker-compose
-    fi
+    command -v foo >/dev/null 2>&1 && pip install docker-compose
 }
 
 install_python() {
@@ -270,10 +208,11 @@ install_golang() {
 }
 
 get_dotfiles() {
-    if [ "${TARGET_USER}" == "root" ]; then
+    if [ "$EUID" -eq 0 ]; then
         echo "Don't run this as root"
         exit 1
     fi
+
     # create subshell
     (
     USERHOME="/home/${TARGET_USER}"
