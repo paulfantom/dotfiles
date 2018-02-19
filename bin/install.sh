@@ -108,7 +108,7 @@ base() {
         ktp-* \
         kwrite \
         mariadb \
-        mariadb-*
+        mariadb-* || echo "Bloatware already removed"
     fi
 
     base_min
