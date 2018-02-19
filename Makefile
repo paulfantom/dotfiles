@@ -1,5 +1,5 @@
 .PHONY: all
-all: bin dotfiles kde etc ## Installs the bin and etc directory files and the dotfiles.
+all: bin dotfiles vim kde etc ## Installs the bin and etc directory files and the dotfiles.
 
 .PHONY: bin
 bin: ## Installs the bin directory files.
@@ -13,7 +13,7 @@ bin: ## Installs the bin directory files.
 .PHONY: dotfiles
 dotfiles: ## Installs the dotfiles.
 	# add aliases for dotfiles
-	for file in $(shell find $(CURDIR) -name ".*" -not -name ".gitignore" -not -name ".travis.yml" -not -name ".git" -not -name ".*.swp" -not -name ".gnupg" -not -name ".config"); do \
+	for file in $(shell find $(CURDIR) -name ".*" -not -name ".gitignore" -not -name ".travis.yml" -not -name ".git" -not -name ".*.swp" -not -name ".gnupg" -not -name ".config" -not -name ".vim"); do \
 		f=$$(basename $$file); \
 		ln -sfn $$file $(HOME)/$$f; \
 	done;
@@ -23,6 +23,13 @@ dotfiles: ## Installs the dotfiles.
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	git update-index --skip-worktree $(CURDIR)/.gitconfig;
 	ln -snf $(CURDIR)/.fonts $(HOME)/.local/share/fonts;
+
+.PHONY: vim
+vim: ## Installs and configures VIM
+	ln -snf $(CURDIR)/.vim $(HOME)/.vim;
+	sudo ln -snf $(CURDIR)/.vim /root/.vim;
+	ln -snf $(CURDIR)/.vim/vimrc $(HOME)/.vimrc;
+	ln -snf $(CURDIR)/.vim/vimrc /root/.vimrc;
 
 .PHONY: kde
 kde: ## Installs the KDE configuration.

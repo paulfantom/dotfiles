@@ -1,0 +1,16 @@
+" BEGIN POWERLINE CONFIG
+set rtp+=/usr/lib/python3.5/site-packages/powerline/bindings/vim/
+set laststatus=2
+set t_Co=256
+" END POWERLINE CONFIG
+" BEGIN CUSTOM OPTIONS
+set ttyfast             " Improves redrawing for newer computers.
+set number              " Show line numbers.
+set relativenumber      " Show relative numbers instead of absolute ones.
+set autoindent          " Indent a new line according to the previous one.
+set copyindent          " Copy (exact) indention from the previous line.
+autocmd Filetype python setlocal ts=4 sw=4 expandtab
+autocmd FileType python set makeprg=pylint\ --reports=n\ --output-format=parseable\ %:p
+autocmd FileType python set efm=%A%f:%l:\ [%t%.%#]\ %m,%Z%p^^,%-C%.%#
+" END CUSTOM OPTIONS
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
