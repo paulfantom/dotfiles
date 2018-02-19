@@ -297,13 +297,14 @@ main() {
         install_scripts
     elif [[ $cmd == "libvirt" ]]; then
         check_is_sudo
+        get_user
     	install_libvirt
     elif [[ $cmd == "vagrant" ]]; then
         check_is_sudo
         install_vagrant "$2"
     elif [[ $cmd == "downloads" ]]; then
         check_is_sudo
-        tmpfs_downloads
+        downloads_tmpfs
     else
         usage
     fi
