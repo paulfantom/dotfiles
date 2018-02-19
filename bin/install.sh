@@ -160,8 +160,9 @@ install_docker() {
     dnf install -y docker-ce
     gpasswd -a "$TARGET_USER" docker
     systemctl enable docker
-
-    command -v pip >/dev/null 2>&1 && pip install docker-compose || :
+    if [ "$(command -v pip >/dev/null 2>&1)" ]; then
+        pip install docker-compose
+    fi
 }
 
 install_python() {
