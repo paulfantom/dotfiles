@@ -117,7 +117,7 @@ setup_repos() {
 	baseurl = https://download.docker.com/linux/fedora/\$releasever/\$basearch/stable
 	gpgkey = https://download.docker.com/linux/fedora/gpg
 	name = Docker CE Stable - \$basearch
-	enabled = 0
+	enabled = 1
 	EOF
 }
 
@@ -131,14 +131,13 @@ base_min() {
         git \
         gnupg \
         gnupg2 \
-        gnupg-agent \
         htop \
         lsof \
         make \
         nmap \
         pbzip2 \
         pigz \
-        ssh \
+        openssh \
         tree \
         unzip \
         vim \
@@ -165,6 +164,7 @@ base() {
 
     install_python
     install_docker
+    install_ansible
 }
 
 install_scripts() {
@@ -206,6 +206,8 @@ install_python() {
 install_ansible() {
     if [[ ! -z "$1" ]]; then
         ANSIBLE="ansible==$1"
+    else
+	ANSIBLE="ansible"
     fi
 
     if [ "$(which pip)" -ne 0 ]; then
@@ -213,7 +215,7 @@ install_ansible() {
     fi
     pip install \
     	"$ANSIBLE" \
-        molecule==1.26 \
+        molecule==1.25.1 \
         testinfra
 }
 
@@ -238,12 +240,16 @@ install_golang() {
 get_dotfiles() {
     # create subshell
     (
-    cd "$HOME"
-    
+    USERHOME="/home/${TARGET_USER}"
+    cd "$USERHOME"
+    mkdir -p "${USERHOME}/Development"
+
     # install dotfiles from repo
-    git clone git@github.com:paulfantom/dotfiles.git "${HOME}/dotfiles"
-    cd "${HOME}/dotfiles"
-    
+    git clone https://github.com/paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles"
+    #git clone git@github.com:paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles"
+    cd "${USERHOME}/Development/dotfiles"
+    git pull
+
     # install all the things
     make   
     )
@@ -253,7 +259,7 @@ get_dotfiles() {
 
 setup_sudo() {
     # add user to sudoers
-    adduser "$TARGET_USER" sudo
+    usermod -aG wheel "$TARGET_USER"
     
     # add user to systemd groups
     # then you wont need sudo to view logs and shit
@@ -300,15 +306,7 @@ main() {
         exit 1
     fi
 
-    if [[ $cmd == "all" ]]; then
-    	check_is_sudo
-    	get_user
-    	setup_repos
-    	base
-    	get_dotfiles
-    	install_ansible
-    	install_vagrant
-    elif [[ $cmd == "base" ]]; then
+    if [[ $cmd == "base" ]]; then
         check_is_sudo
         get_user
         setup_repos
