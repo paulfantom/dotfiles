@@ -36,65 +36,69 @@ get_user() {
 }
 
 setup_repos() {
-   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free.repo
-	[rpmfusion-free]
-	name=RPM Fusion for Fedora \$releasever - Free
-	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-\$releasever&arch=\$basearch
-	enabled=1
-	metadata_expire=14d
-	type=rpm-md
-	gpgcheck=1
-	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
-	EOF
+   dnf install -y \
+       "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
+       "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
-   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free-updates.repo
-	[rpmfusion-free-updates]
-	name=RPM Fusion for Fedora \$releasever - Free - Updates
-	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-released-\$releasever&arch=\$basearch
-	enabled=1
-	type=rpm-md
-	gpgcheck=1
-	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
-	EOF
-
-   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free-updates-testing.repo
-	[rpmfusion-free-updates-testing]
-	name=RPM Fusion for Fedora \$releasever - Free - Test Updates
-	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-testing-\$releasever&arch=\$basearch
-	enabled = 0
-	gpgcheck=1
-	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
-	EOF
-
-   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree.repo
-	[rpmfusion-nonfree]
-	name=RPM Fusion for Fedora \$releasever - Nonfree
-	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-\$releasever&arch=\$basearch
-	enabled=1
-	metadata_expire=14d
-	type=rpm-md
-	gpgcheck=1
-	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
-	EOF
-
-   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree-updates.repo
-	[rpmfusion-nonfree-updates]
-	name=RPM Fusion for Fedora \$releasever - Nonfree - Updates
-	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-updates-released-\$releasever&arch=\$basearch
-	enabled=1
-	type=rpm-md
-	gpgcheck=1
-	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
-	EOF
-
-   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree-updates-testing.repo
-	[rpmfusion-nonfree-updates-testing]
-	name=RPM Fusion for Fedora \$releasever - Nonfree - Test Updates
-	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-updates-testing-\$releasever&arch=\$basearch
-	enabled = 0
-	gpgcheck=1
-	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
-	EOF
+#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free.repo
+#	[rpmfusion-free]
+#	name=RPM Fusion for Fedora \$releasever - Free
+#	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-\$releasever&arch=\$basearch
+#	enabled=1
+#	metadata_expire=14d
+#	type=rpm-md
+#	gpgcheck=1
+#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
+#	EOF
+#
+#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free-updates.repo
+#	[rpmfusion-free-updates]
+#	name=RPM Fusion for Fedora \$releasever - Free - Updates
+#	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-released-\$releasever&arch=\$basearch
+#	enabled=1
+#	type=rpm-md
+#	gpgcheck=1
+#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
+#	EOF
+#
+#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-free-updates-testing.repo
+#	[rpmfusion-free-updates-testing]
+#	name=RPM Fusion for Fedora \$releasever - Free - Test Updates
+#	metalink=https://mirrors.rpmfusion.org/metalink?repo=free-fedora-updates-testing-\$releasever&arch=\$basearch
+#	enabled = 0
+#	gpgcheck=1
+#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-\$releasever
+#	EOF
+#
+#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree.repo
+#	[rpmfusion-nonfree]
+#	name=RPM Fusion for Fedora \$releasever - Nonfree
+#	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-\$releasever&arch=\$basearch
+#	enabled=1
+#	metadata_expire=14d
+#	type=rpm-md
+#	gpgcheck=1
+#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
+#	EOF
+#
+#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree-updates.repo
+#	[rpmfusion-nonfree-updates]
+#	name=RPM Fusion for Fedora \$releasever - Nonfree - Updates
+#	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-updates-released-\$releasever&arch=\$basearch
+#	enabled=1
+#	type=rpm-md
+#	gpgcheck=1
+#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
+#	EOF
+#
+#   cat <<-EOF > /etc/yum.repos.d/rpmfusion-nonfree-updates-testing.repo
+#	[rpmfusion-nonfree-updates-testing]
+#	name=RPM Fusion for Fedora \$releasever - Nonfree - Test Updates
+#	metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-updates-testing-\$releasever&arch=\$basearch
+#	enabled = 0
+#	gpgcheck=1
+#	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-\$releasever
+#	EOF
 
    cat <<-EOF > /etc/yum.repos.d/negativo-spotify.repo
 	[negativo-spotify]
@@ -142,6 +146,7 @@ base_min() {
         tree \
         unzip \
         vim \
+        wget \
         zip
 
     install_scripts
@@ -152,6 +157,7 @@ base() {
     dnf install -y \
         bridge-utils \
         kate \
+        keepassxc \
         libreoffice \
         pavucontrol \
         powerline \
@@ -314,7 +320,6 @@ downloads_tmpfs() {
 usage() {
     echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
     echo "Usage:"
-    echo "  all                                 - setup everything"
     echo "  base                                - setup sources & install base pkgs"
     echo "  dotfiles                            - get dotfiles"
     echo "  vim                                 - install vim specific dotfiles"
