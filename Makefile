@@ -26,9 +26,9 @@ dotfiles: ## Installs the dotfiles.
 
 .PHONY: kde
 kde: ## Installs the KDE configuration.
-	for file in $(ls $(CURDIR)/.config); do \
+	for file in $(shell find $(CURDIR)/.config -name "*"); do \
 		f=$$(basename $$file); \
-		ln -sfn $$file $(HOME)/.config/$$f; \
+		ln -sfn $$file $(HOME)/$$f; \
 	done
 
 .PHONY: etc
@@ -37,6 +37,7 @@ etc: ## Installs the etc directory files.
 	for file in $(shell find $(CURDIR)/etc -type f -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
 		sudo ln -f $$file $$f; \
+		sudo chown root:root $$f; \
 	done
 	systemctl --user daemon-reload || true
 	sudo systemctl daemon-reload
