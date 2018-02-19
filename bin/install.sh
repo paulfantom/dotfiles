@@ -261,6 +261,7 @@ downloads_tmpfs() {
 usage() {
     echo -e "install.sh\\n\\tThis script installs my basic setup for a fedora laptop\\n"
     echo "Usage:"
+    echo "  full                                - install almost everything"
     echo "  base                                - setup sources & install base pkgs"
     echo "  dotfiles                            - get dotfiles"
     echo "  golang                              - install golang and packages"
@@ -279,7 +280,17 @@ main() {
         exit 1
     fi
 
-    if [[ $cmd == "base" ]]; then
+    if [[ $cmd == "full" ]]; then
+        check_is_sudo
+        get_user
+        setup_repos
+        base
+        install_scripts
+        install_libvirt
+        install_vagrant
+        install_golang
+        echo "To finish configuration run '$0 dotfiles' as a non-root user"
+    elif [[ $cmd == "base" ]]; then
         check_is_sudo
         get_user
         setup_repos
