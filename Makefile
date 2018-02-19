@@ -29,7 +29,7 @@ vim: ## Installs and configures VIM
 	ln -snf $(CURDIR)/.vim $(HOME)/.vim;
 	sudo ln -snf $(CURDIR)/.vim /root/.vim;
 	ln -snf $(CURDIR)/.vim/vimrc $(HOME)/.vimrc;
-	ln -snf $(CURDIR)/.vim/vimrc /root/.vimrc;
+	sudo ln -snf $(CURDIR)/.vim/vimrc /root/.vimrc;
 
 .PHONY: kde
 kde: ## Installs the KDE configuration.
