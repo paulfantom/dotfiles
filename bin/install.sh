@@ -191,7 +191,12 @@ install_ansible() {
 }
 
 install_vagrant() {
-    echo "TODO: install virtualbox and vagrant"
+    dnf install -y \
+        VirtualBox \
+        vagrant \
+        vagrant-sshfs \
+        vagrant-digitalocean 
+    echo "TODO: configure virtualbox and vagrant"
 }
 
 install_libvirt() {
@@ -207,7 +212,10 @@ install_libvirt() {
 }
 
 install_golang() {
-    echo "TODO: install golang"
+#    export GO_VERSION
+#    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
+#    export GO_SRC=/usr/local/go
+    dnf install -y golang
 }
 
 get_dotfiles() {
