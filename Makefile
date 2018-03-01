@@ -30,6 +30,8 @@ vim: ## Installs and configures VIM
 	sudo ln -snf $(CURDIR)/.vim /root/.vim;
 	ln -snf $(CURDIR)/.vim/vimrc $(HOME)/.vimrc;
 	sudo ln -snf $(CURDIR)/.vim/vimrc /root/.vimrc;
+	git submodule update --init --recursive
+	git submodule foreach git pull --recurse-submodules origin master
 
 .PHONY: kde
 kde: ## Installs the KDE configuration.
