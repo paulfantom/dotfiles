@@ -30,9 +30,6 @@ vim: ## Installs and configures VIM
 	sudo ln -snf $(CURDIR)/.vim /root/.vim;
 	ln -snf $(CURDIR)/.vim/vimrc $(HOME)/.vimrc;
 	sudo ln -snf $(CURDIR)/.vim/vimrc /root/.vimrc;
-        mkdir -p $(HOME)/.vim/pack/default/start;
-        git clone https://github.com/sheerun/vim-polyglot $(HOME)/.vim/pack/default/start/vim-polyglot;
-
 
 .PHONY: kde
 kde: ## Installs the KDE configuration.
