@@ -75,6 +75,7 @@ base_min() {
         git \
         gnupg \
         gnupg2 \
+        hdparm \
         htop \
         lsof \
         make \
@@ -82,6 +83,7 @@ base_min() {
         nmap \
         pbzip2 \
         pigz \
+        pv \
         openssh \
         tree \
         unzip \
@@ -154,6 +156,10 @@ install_scripts() {
     # install lolcat
     curl -sSL https://raw.githubusercontent.com/tehmaze/lolcat/master/lolcat > /usr/local/bin/lolcat
     chmod +x /usr/local/bin/lolcat
+
+    # install flash
+    curl -sSL https://raw.githubusercontent.com/hypriot/flash/master/Linux/flash > /usr/local/bin/flash
+    chmod +x /usr/local/bin/flash
 }
 
 install_docker() {
