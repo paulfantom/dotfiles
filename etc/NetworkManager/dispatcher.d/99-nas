@@ -3,16 +3,17 @@
 IF="$1"
 STATUS="$2"
 ESSID="Now you see me"
+HOST="nas.ankhmorpork"
 
 if [ "$IF" == "wlan0" ]; then
   case "$STATUS" in
   up)
     if iwgetid | grep -qs ":\"$ESSID\""; then
-      mount nas.ankhmorpork:/srv/tv /mnt/nas/tv 
-      mount nas.ankhmorpork:/srv/pictures /mnt/nas/pictures
-      mount nas.ankhmorpork:/srv/downloads /mnt/nas/downloads
-      mount nas.ankhmorpork:/srv/movies /mnt/nas/movies
-      mount nas.ankhmorpork:/srv/videos /mnt/nas/videos
+      mount "${HOST}:/srv/tv" /mnt/nas/tv
+      mount "${HOST}:/srv/pictures" /mnt/nas/pictures
+      mount "${HOST}:/srv/downloads" /mnt/nas/downloads
+      mount "${HOST}:/srv/movies" /mnt/nas/movies
+      mount "${HOST}:/srv/videos" /mnt/nas/videos
     fi
     ;;
   down|pre-down)
