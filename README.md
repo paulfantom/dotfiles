@@ -38,3 +38,18 @@ need to install anything. They run in a container.
 ```console
 $ make test
 ```
+
+### Based on
+
+https://github.com/gpakosz/.tmux
+https://github.com/mathiasbynens/dotfiles
+https://github.com/sheerun/vim-polyglot
+https://github.com/jessfraz/.vim/blob/master/vimrc
+https://github.com/drduh/YubiKey-Guide
+
+### TODO
+
+- Full KDE configuration
+- golang installation
+- libvirt configuration
+- vagrant and virtualbox configuration
