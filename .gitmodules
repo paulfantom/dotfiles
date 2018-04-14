@@ -1,0 +1,6 @@
+[submodule ".vim/pack/default/start/vim-jinja"]
+	path = .vim/pack/default/start/vim-jinja
+	url = https://github.com/lepture/vim-jinja.git
+[submodule ".vim/pack/default/start/vim-polyglot"]
+	path = .vim/pack/default/start/vim-polyglot
+	url = https://github.com/sheerun/vim-polyglot.git
