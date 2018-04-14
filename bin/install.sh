@@ -160,6 +160,14 @@ install_scripts() {
     # install flash
     curl -sSL https://raw.githubusercontent.com/hypriot/flash/master/Linux/flash > /usr/local/bin/flash
     chmod +x /usr/local/bin/flash
+
+    # install tuptime
+    curl -sSL https://raw.githubusercontent.com/rfrail3/tuptime/master/src/tuptime > /usr/bin/tuptime
+    curl -sSL https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime.service > /etc/systemd/system/tuptime.service
+    curl -sSL https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime.timer > /etc/systemd/system/tuptime.timer
+    chmod +x /usr/bin/tuptime
+    systemctl daemon-reload
+    systemctl enable tuptime.timer
 }
 
 install_docker() {
