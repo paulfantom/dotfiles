@@ -32,7 +32,7 @@ git config --global github.user "$GH_USER"
 
 ### Tests
 
-The tests use [shellcheck](https://github.com/koalaman/shellcheck). You don't
+The tests use [shellcheck](https://github.com/koalaman/shellcheck) and [pylint](https://www.pylint.org/). You don't
 need to install anything. They run in a container.
 
 ```console
@@ -41,11 +41,11 @@ $ make test
 
 ### Based on
 
-https://github.com/gpakosz/.tmux
-https://github.com/mathiasbynens/dotfiles
-https://github.com/sheerun/vim-polyglot
-https://github.com/jessfraz/.vim/blob/master/vimrc
-https://github.com/drduh/YubiKey-Guide
+- https://github.com/gpakosz/.tmux
+- https://github.com/mathiasbynens/dotfiles
+- https://github.com/sheerun/vim-polyglot
+- https://github.com/jessfraz/.vim/blob/master/vimrc
+- https://github.com/drduh/YubiKey-Guide
 
 ### TODO
 
