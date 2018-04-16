@@ -52,7 +52,7 @@ etc: ## Installs the etc directory files.
 	sudo systemctl daemon-reload
 
 .PHONY: test
-test: shellcheck ## Runs all the tests on the files in the repository.
+test: shellcheck pylint ## Runs all the tests on the files in the repository.
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -64,11 +64,14 @@ endif
 
 PHONY: shellcheck
 shellcheck: ## Runs the shellcheck tests on the scripts.
-	docker run --rm -i $(DOCKER_FLAGS) \
-		--name df-shellcheck \
-		-v $(CURDIR):/usr/src:ro \
-		--workdir /usr/src \
-		r.j3ss.co/shellcheck ./test.sh
+	for file in $(shell find $(CURDIR) -type f -not -iwholename '*.git*' | while read in ; do if file -i "$${in}" | grep -q x-shell ; then echo "$${in}" ; fi ; done); do \
+                f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
+		docker run -v "$(CURDIR):/code" koalaman/shellcheck "/code$$f" || exit 1 ;\
+	done
+
+PHONY: pylint
+pylint: ## Runs the shellcheck tests on the scripts.
+	docker run -v "$(CURDIR):/code" eeacms/pylint || exit 1;\
 
 PHONY: help
 help:
