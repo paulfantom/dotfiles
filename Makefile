@@ -63,14 +63,14 @@ ifeq ($(INTERACTIVE), 1)
 endif
 
 PHONY: shellcheck
-shellcheck: ## Runs the shellcheck tests on the scripts.
+shellcheck: ## Runs shellcheck tests on the scripts.
 	for file in $(shell find $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-shell ; then echo "$${in}" ; fi ; done); do \
                 f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
 		docker run -v "$(CURDIR):/code" koalaman/shellcheck "/code$$f" && echo "[OK]: sucessfully linted $$f" || exit 1 ;\
 	done
 
 PHONY: pylint
-pylint: ## Runs the shellcheck tests on the scripts.
+pylint: ## Runs pylint tests on the scripts.
 	for file in $(shell find $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-python ; then echo "$${in}" ; fi ; done); do \
                 f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
 		docker run -v "$(CURDIR):/code" eeacms/pylint pylint "/code$$f" && echo "[OK]: sucessfully linted $$f" || exit 1;\
