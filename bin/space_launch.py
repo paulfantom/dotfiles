@@ -23,7 +23,7 @@ def get_launch(url):
     next_launch = response.json()['launches'][0]
 
     vids = next_launch['vidURLs']
-    if vids is None:
+    if vids is None or not vids:
         video = next_launch['vidURL']
     else:
         video = ", ".join(vids)
@@ -31,9 +31,9 @@ def get_launch(url):
     rocket = next_launch['rocket']['name']
     date = next_launch['windowstart']
     #pylint: disable=C0301
-    msg = "NEXT SPACE LAUNCH: {}, mission {} with {} rocket".format(date, mission, rocket)
+    msg = u'NEXT SPACE LAUNCH: {}, mission {} with {} rocket'.format(date, mission, rocket)
 
-    return msg if video is None else "{} watch at: {}".format(msg, video)
+    return msg if video is None else u'{} watch at: {}'.format(msg, video)
 
 
 if __name__ == '__main__':
