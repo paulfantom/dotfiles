@@ -30,10 +30,9 @@ def get_launch(url):
     mission = next_launch['missions'][0]['name']
     rocket = next_launch['rocket']['name']
     date = next_launch['windowstart']
-    #pylint: disable=C0301
-    msg = u'NEXT SPACE LAUNCH: {}, mission {} with {} rocket'.format(date, mission, rocket)
+    msg = "NEXT SPACE LAUNCH: {}, mission {} with {} rocket".format(date.encode('utf-8'), mission.encode('utf-8'), rocket.encode('utf-8'))
 
-    return msg if video is None else u'{} watch at: {}'.format(msg, video)
+    return msg if video is None else "{} watch at: {}".format(msg, video.encode('utf-8'))
 
 
 if __name__ == '__main__':
