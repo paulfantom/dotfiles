@@ -265,6 +265,7 @@ if [ "$?" -eq 0 ]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         delete_vm "${VMNAME}"
     else
+        # shellcheck disable=SC1117
         echo -e "\nNot overwriting ${VMNAME}. Exiting..."
         exit 1
     fi
@@ -274,6 +275,7 @@ fi
 rm -rf "${IMAGEDIR:?}/${VMNAME}"
 mkdir -p "${IMAGEDIR}/${VMNAME}"
 
+# shellcheck disable=SC2164
 pushd "${IMAGEDIR}/${VMNAME}" > /dev/null
 
     # Create log file
@@ -425,4 +427,5 @@ _EOF_
     echo "[$(date +%r)]----> SSH to ${VMNAME}: 'ssh ${LOGIN_USER}@$IP'."
     echo "[$(date +%r)]----> DONE."
 
+# shellcheck disable=SC2164
 popd > /dev/null

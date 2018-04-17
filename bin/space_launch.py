@@ -23,7 +23,7 @@ def get_launch(url):
     next_launch = response.json()['launches'][0]
 
     vids = next_launch['vidURLs']
-    if vids is None:
+    if vids is None or not vids:
         video = next_launch['vidURL']
     else:
         video = ", ".join(vids)

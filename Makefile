@@ -52,7 +52,7 @@ etc: ## Installs the etc directory files.
 	sudo systemctl daemon-reload
 
 .PHONY: test
-test: shellcheck ## Runs all the tests on the files in the repository.
+test: shellcheck pylint ## Runs all the tests on the files in the repository.
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -61,14 +61,21 @@ INTERACTIVE := $(shell [ -t 0 ] && echo 1 || echo 0)
 ifeq ($(INTERACTIVE), 1)
 	DOCKER_FLAGS += -t
 endif
+SHELL := /bin/bash
 
 PHONY: shellcheck
-shellcheck: ## Runs the shellcheck tests on the scripts.
-	docker run --rm -i $(DOCKER_FLAGS) \
-		--name df-shellcheck \
-		-v $(CURDIR):/usr/src:ro \
-		--workdir /usr/src \
-		r.j3ss.co/shellcheck ./test.sh
+shellcheck: ## Runs shellcheck tests on the scripts.
+	for file in $(shell find $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-shell ; then echo "$${in}" ; fi ; done); do \
+                f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
+		docker run -v "$(CURDIR):/code" koalaman/shellcheck "/code$$f" && echo -e "\033[32m[OK]\033[0m: sucessfully linted $$f" || ( echo -e "\033[31m[FAIL]\033[0m: linting $$f" && exit 1 );\
+	done
+
+PHONY: pylint
+pylint: ## Runs pylint tests on the scripts.
+	for file in $(shell find $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-python ; then echo "$${in}" ; fi ; done); do \
+                f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
+		docker run -v "$(CURDIR):/code" eeacms/pylint pylint "/code$$f" && echo -e "\033[32m[OK]\033[0m: sucessfully linted $$f" || ( echo -e "\033[31m[FAIL]\033[0m: linting $$f" && exit 1 );\
+	done
 
 PHONY: help
 help:
