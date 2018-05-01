@@ -129,7 +129,7 @@ base() {
         spotify \
         tlp \
         vim-powerline \
-        vivaldi-stable \
+        vivaldi-snapshot \
         vlc \
         xbindkeys \
         xmodmap \
