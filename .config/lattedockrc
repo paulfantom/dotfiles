@@ -1,3 +1,7 @@
+[PlasmaRunnerManager]
+LaunchCounts=1 services_vivaldi-snapshot.desktop
+pluginWhiteList=services,desktopsessions,PowerDevil,shell,bookmarks,baloosearch,locations
+
 [ScreenConnectors]
 10=eDP-1
 
