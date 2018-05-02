@@ -252,10 +252,14 @@ downloads_tmpfs() {
     # setup downloads folder as tmpfs
     # that way things are removed on reboot
     # i like things clean but you may not want this
+    if [ -z "${TARGET_USER-}" ]; then
+        echo "Something went wrong when getting user name"
+        exit 0
+    fi
     mkdir -p "/home/$TARGET_USER/Downloads"
     { \
         echo -e "\\n# tmpfs for downloads"; \
-        echo -e "tmpfs\\t/home/${TARGET_USER}/Downloads\\ttmpfs\\tnodev,nosuid,size=2G\\t0\\t0"; \
+        echo -e "tmpfs\\t/home/${TARGET_USER}/Downloads\\ttmpfs\\tnodev,nosuid,size=3G\\t0\\t0"; \
     } >> /etc/fstab
 }
 
