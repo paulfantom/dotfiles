@@ -13,6 +13,7 @@ Session.vim
 .netrwhist
 *~
 
+.dotfiles
 .extra
 .gitconfig
 .gnupg
