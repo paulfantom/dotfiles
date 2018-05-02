@@ -1,5 +1,5 @@
 .PHONY: all
-all: bin dotfiles vim kde etc ## Installs the bin and etc directory files and the dotfiles.
+all: bin install dotfiles vim kde etc ## Installs the bin and etc directory files and the dotfiles.
 
 .PHONY: bin
 bin: ## Installs the bin directory files.
@@ -9,6 +9,9 @@ bin: ## Installs the bin directory files.
 		sudo ln -sf $$file /usr/local/bin/$$f; \
 	done
 
+.PHONY: install
+install: ## Execute full installation script
+	sudo ./bin/install.sh full
 
 .PHONY: dotfiles
 dotfiles: ## Installs the dotfiles.
