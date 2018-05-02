@@ -171,7 +171,8 @@ install_scripts() {
 }
 
 install_docker() {
-    dnf install -y docker-ce
+    dnf install -y docker-ce || dnf install -y docker
+    groupadd docker
     gpasswd -a "$TARGET_USER" docker
     systemctl enable docker
     if [ "$(command -v pip >/dev/null 2>&1)" ]; then
@@ -186,7 +187,7 @@ install_python() {
         python{2,3}-virtualenv
 
     pip install --upgrade pip
-    pip3 install --upgrade pip
+    pip3 install --upgrade pip || echo "Couldn't upgrade pip3"
 }
 
 install_ansible() {
@@ -232,29 +233,6 @@ install_golang() {
     dnf install -y golang
 }
 
-get_dotfiles() {
-    if [ "$EUID" -eq 0 ]; then
-        echo "Don't run this as root"
-        exit 1
-    fi
-
-    # create subshell
-    (
-    USERHOME="/home/${TARGET_USER}"
-    cd "$USERHOME"
-    mkdir -p "${USERHOME}/Development"
-
-    # install dotfiles from repo
-    git clone https://github.com/paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles" || :
-    #git clone git@github.com:paulfantom/dotfiles.git "${USERHOME}/Development/dotfiles"
-    cd "${USERHOME}/Development/dotfiles"
-    git pull
-
-    # install all the things
-    make   
-    )
-}
-
 setup_sudo() {
     # add user to sudoers
     gpasswd -a "$TARGET_USER" wheel
@@ -286,7 +264,6 @@ usage() {
     echo "Usage:"
     echo "  full                                - install almost everything"
     echo "  base                                - setup sources & install base pkgs"
-    echo "  dotfiles                            - get dotfiles"
     echo "  golang                              - install golang and packages"
     echo "  ansible                             - install ansible and packages"
     echo "  scripts                             - install scripts"
@@ -312,15 +289,11 @@ main() {
         install_libvirt
         install_vagrant
         install_golang
-        echo "To finish configuration run '$0 dotfiles' as a non-root user"
     elif [[ $cmd == "base" ]]; then
         check_is_sudo
         get_user
         setup_repos
         base
-    elif [[ $cmd == "dotfiles" ]]; then
-        get_user
-        get_dotfiles
     elif [[ $cmd == "golang" ]]; then
         install_golang "$2"
     elif [[ $cmd == "ansible" ]]; then

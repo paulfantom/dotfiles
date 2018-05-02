@@ -1,3 +1,6 @@
+[ScreenConnectors]
+10=eDP-1
+
 [UniversalSettings]
 currentLayout=paulfantom
 lastNonAssignedLayout=paulfantom
