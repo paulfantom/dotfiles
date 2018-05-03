@@ -75,6 +75,7 @@ base_min() {
         git \
         gnupg \
         gnupg2 \
+        haveged \
         hdparm \
         htop \
         lsof \
@@ -91,6 +92,7 @@ base_min() {
         wget \
         zip
 
+    systemctl enable --now haveged
     install_scripts
 }
 
