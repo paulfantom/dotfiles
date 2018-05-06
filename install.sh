@@ -122,6 +122,8 @@ base() {
         keepassxc \
         latte-dock \
         libreoffice \
+        libva-intel-driver \
+        libva-utils \
         nextcloud-client \
         nextcloud-client-dolphin \
         pavucontrol \
@@ -160,7 +162,7 @@ install_scripts() {
     chmod +x /usr/local/bin/lolcat
 
     # install flash
-    curl -sSL https://raw.githubusercontent.com/hypriot/flash/master/Linux/flash > /usr/local/bin/flash
+    curl -sSL https://raw.githubusercontent.com/hypriot/flash/master/flash > /usr/local/bin/flash
     chmod +x /usr/local/bin/flash
 
     # install tuptime
