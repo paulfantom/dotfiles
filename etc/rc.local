@@ -11,5 +11,5 @@
 #
 # By default this script does nothing.
 
-powertop --auto-tune
+#powertop --auto-tune
 exit 0
