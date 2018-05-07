@@ -56,6 +56,15 @@ setup_repos() {
 	enabled = 1
 	EOF
 
+   cat <<-EOF > /etc/yum.repos.d/google-chrome.repo
+	[google-chrome]
+	name=google-chrome
+	baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+	enabled=1
+	gpgcheck=1
+	gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+	EOF
+
    cat <<-EOF > /etc/yum.repos.d/docker.repo
 	[docker-ce-stable]
 	baseurl = https://download.docker.com/linux/fedora/\$releasever/\$basearch/stable
@@ -118,6 +127,9 @@ base() {
     base_min
     dnf install -y \
         bridge-utils \
+        exfat-utils \
+        fuse-exfat \
+        google-chrome-stable \
         kate \
         keepassxc \
         latte-dock \
