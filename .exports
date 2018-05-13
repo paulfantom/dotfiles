@@ -9,6 +9,8 @@ export HISTFILESIZE=$HISTSIZE;
 export HISTCONTROL=ignoredups;
 # Make some commands not show up in history
 export HISTIGNORE=" *:ls:cd:cd -:pwd:exit:date:* --help:* -h:pony:pony add *:pony update *:pony save *:pony ls:pony ls *";
+# Change history date format
+export HISTTIMEFORMAT="%d/%m/%y %T "
 
 # Prefer US English and use UTF-8
 export LANG="en_US.UTF-8";
@@ -28,9 +30,9 @@ export TODOTXT_DEFAULT_ACTION=ls
 #export QT_DEVICE_PIXEL_RATIO=2
 
 # turn on go vendoring experiment
-export GO15VENDOREXPERIMENT=1
+#export GO15VENDOREXPERIMENT=1
 
-export DOCKER_CONTENT_TRUST=1
+#export DOCKER_CONTENT_TRUST=1
 
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # if it's an ssh session export GPG_TTY

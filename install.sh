@@ -136,6 +136,7 @@ base() {
         libreoffice \
         libva-intel-driver \
         libva-utils \
+        lm_sensors \
         nextcloud-client \
         nextcloud-client-dolphin \
         pavucontrol \
