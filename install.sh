@@ -127,6 +127,7 @@ base() {
     base_min
     dnf install -y \
         bridge-utils \
+        colordiff \
         exfat-utils \
         fuse-exfat \
         google-chrome-stable \
