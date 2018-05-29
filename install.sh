@@ -131,6 +131,7 @@ base() {
         exfat-utils \
         fuse-exfat \
         google-chrome-stable \
+        jq \
         kate \
         keepassxc \
         latte-dock \
