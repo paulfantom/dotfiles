@@ -129,6 +129,7 @@ base() {
         bridge-utils \
         colordiff \
         exfat-utils \
+        fedora-workstation-repositories \
         fuse-exfat \
         google-chrome-stable \
         jq \
