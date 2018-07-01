@@ -2,8 +2,8 @@
 
 IF="$1"
 STATUS="$2"
-ESSID="Now you see me"
-HOST="nas.ankhmorpork"
+ESSID="212"
+HOST="nas"
 
 if [ "$IF" == "wlan0" ]; then
   case "$STATUS" in
