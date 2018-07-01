@@ -4,3 +4,6 @@
 [submodule ".vim/pack/default/start/vim-polyglot"]
 	path = .vim/pack/default/start/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot.git
+[submodule ".vim/pack/default/start/ale"]
+	path = .vim/pack/default/start/ale
+	url = https://github.com/w0rp/ale.git
