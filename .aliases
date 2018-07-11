@@ -1,6 +1,6 @@
 alias vi="vim"
 alias mtr='mtr -o "LRDS N BAW" '
-alias up="sudo dnf update --refresh || sudo zypper up || sudo apt upgrade"
+alias up="sudo dnf update --refresh || sudo zypper up || sudo apt upgrade; notify-send 'System update finished'"
 alias yakuake-toggle='qdbus org.kde.yakuake /yakuake/window org.kde.yakuake.toggleWindowState'
 alias yakuake-retract='if [ "`qdbus org.kde.yakuake /yakuake/MainWindow_1 org.qtproject.Qt.QWidget.isActiveWindow`" = "true" ]; then yakuake-toggle; fi'
 alias ambilight="python2 $HOME/Development/Programming/ambilight/controller/main.py"

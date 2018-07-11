@@ -72,6 +72,20 @@ setup_repos() {
 	name = Docker CE Stable - \$basearch
 	enabled = 1
 	EOF
+
+    cat <<-EOF > /etc/yum.repos.d/slack.repo
+	[slack]
+	name=Slack
+	baseurl=https://packagecloud.io/slacktechnologies/slack/fedora/21/\$basearch
+	repo_gpgcheck=1
+	gpgcheck=1
+	enabled=1
+	gpgkey=https://packagecloud.io/slacktechnologies/slack/gpgkey
+	sslverify=1
+	sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+	metadata_expire=300
+	EOF
+
 }
 
 base_min() {
@@ -136,6 +150,7 @@ base() {
         kate \
         keepassxc \
         latte-dock \
+        libappindicator \
         libreoffice \
         libva-intel-driver \
         libva-utils \
@@ -146,6 +161,7 @@ base() {
         powerline \
         powerline-fonts \
         powertop \
+        slack \
         spotify \
         tlp \
         vim-powerline \
@@ -336,6 +352,8 @@ main() {
     elif [[ $cmd == "downloads" ]]; then
         check_is_sudo
         downloads_tmpfs
+    elif [[ $cmd == "slack" ]]; then
+        install_slack
     else
         usage
     fi
