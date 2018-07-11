@@ -14,3 +14,5 @@ autocmd FileType python set makeprg=pylint\ --reports=n\ --output-format=parseab
 autocmd FileType python set efm=%A%f:%l:\ [%t%.%#]\ %m,%Z%p^^,%-C%.%#
 " END CUSTOM OPTIONS
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+autocmd FileType markdown set colorcolumn=120
