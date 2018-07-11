@@ -10,6 +10,7 @@ Requirements:
   - requests library (http://docs.python-requests.org/en/master/)
 """
 
+# pylint: disable=F0401
 import requests
 
 URL = "https://launchlibrary.net/1.3/launch/next/1"
@@ -30,7 +31,7 @@ def get_launch(url):
     mission = next_launch['missions'][0]['name']
     rocket = next_launch['rocket']['name']
     date = next_launch['windowstart']
-    #pylint: disable=C0301
+    # pylint: disable=C0301
     msg = u'NEXT SPACE LAUNCH: {}, mission {} with {} rocket'.format(date, mission, rocket)
 
     return msg if video is None else u'{} watch at: {}'.format(msg, video)
