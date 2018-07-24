@@ -11,7 +11,7 @@ bin: ## Installs the bin directory files.
 
 .PHONY: install
 install: ## Execute full installation script
-	sudo ./bin/install.sh full
+	sudo ./install.sh full
 
 .PHONY: dotfiles
 dotfiles: ## Installs the dotfiles.
