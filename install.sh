@@ -127,6 +127,7 @@ base() {
         akregator \
         amarok \
         dragonplayer \
+        kaddressbook \
         kcalendar \
         kget \
         kmail \
