@@ -351,6 +351,7 @@ main() {
         install_vagrant "$2"
     elif [[ $cmd == "downloads" ]]; then
         check_is_sudo
+        get_user
         downloads_tmpfs
     elif [[ $cmd == "slack" ]]; then
         install_slack
