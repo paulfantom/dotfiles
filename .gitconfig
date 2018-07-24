@@ -182,10 +182,23 @@
 	#fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
 
 [user]
-	email = pawel@krupa.net.pl
-	name = paulfantom
-	signingkey = 0x12AE0185401674E7
+        email = pawel@krupa.net.pl
+        name = paulfantom
+        signingkey = 0x12AE0185401674E7
+
+[includeIf "gitdir:~/redhat/"]
+        path = .gitconfig-work
+
+[includeIf "gitdir:~/.go/src/github.com/openshift"]
+        path = .gitconfig-work
 
 [commit]
-	gpgsign = true
+        gpgsign = true
+[gpg]
+        program = gpg2
+[filter "lfs"]
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+        process = git-lfs filter-process
+        required = true
 
