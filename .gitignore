@@ -15,7 +15,6 @@ Session.vim
 
 .dotfiles
 .extra
-.gitconfig
 .gnupg/*
 !.gnupg/gpg.conf
 !.gnupg/gpg-agent.conf

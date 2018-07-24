@@ -181,5 +181,11 @@
 #[remote "origin"]
 	#fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
 
+[user]
+	email = pawel@krupa.net.pl
+	name = paulfantom
+	signingkey = 0x12AE0185401674E7
+
 [commit]
 	gpgsign = true
+
