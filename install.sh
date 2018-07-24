@@ -77,8 +77,8 @@ setup_repos() {
 	[slack]
 	name=Slack
 	baseurl=https://packagecloud.io/slacktechnologies/slack/fedora/21/\$basearch
-	repo_gpgcheck=1
-	gpgcheck=1
+	repo_gpgcheck=0
+	gpgcheck=0
 	enabled=1
 	gpgkey=https://packagecloud.io/slacktechnologies/slack/gpgkey
 	sslverify=1
@@ -329,6 +329,7 @@ main() {
         install_libvirt
         install_vagrant
         install_golang
+        downloads
     elif [[ $cmd == "base" ]]; then
         check_is_sudo
         get_user
@@ -351,6 +352,7 @@ main() {
         install_vagrant "$2"
     elif [[ $cmd == "downloads" ]]; then
         check_is_sudo
+        get_user
         downloads_tmpfs
     elif [[ $cmd == "slack" ]]; then
         install_slack
