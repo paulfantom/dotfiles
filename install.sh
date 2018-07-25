@@ -263,6 +263,11 @@ install_libvirt() {
     systemctl enable libvirtd
 }
 
+install_k8s_tools() {
+    dnf install -y \
+        origin-clients
+}
+
 install_golang() {
 #    export GO_VERSION
 #    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
@@ -330,6 +335,7 @@ main() {
         install_libvirt
         install_vagrant
         install_golang
+        install_k8s_tools
         downloads
     elif [[ $cmd == "base" ]]; then
         check_is_sudo
@@ -337,7 +343,7 @@ main() {
         setup_repos
         base
     elif [[ $cmd == "golang" ]]; then
-        install_golang "$2"
+        install_golang
     elif [[ $cmd == "ansible" ]]; then
         check_is_sudo
         install_ansible "$2"
@@ -351,6 +357,10 @@ main() {
     elif [[ $cmd == "vagrant" ]]; then
         check_is_sudo
         install_vagrant "$2"
+    elif [ $cmd == "k8s" -o $cmd == "kubernetes" -o $cmd == "openshift" ]; then
+        install_golang
+        check_is_sudo
+        install_k8s_tools
     elif [[ $cmd == "downloads" ]]; then
         check_is_sudo
         get_user
