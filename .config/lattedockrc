@@ -1,9 +1,10 @@
 [PlasmaRunnerManager]
-LaunchCounts=1 services_vivaldi-snapshot.desktop
+LaunchCounts=1 services_vivaldi-snapshot.desktop,1 services_slack.desktop
 pluginWhiteList=services,desktopsessions,PowerDevil,shell,bookmarks,baloosearch,locations
 
 [ScreenConnectors]
 10=eDP-1
+11=HDMI-1
 
 [UniversalSettings]
 currentLayout=paulfantom
