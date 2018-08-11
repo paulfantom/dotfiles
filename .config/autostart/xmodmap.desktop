@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Xmodmap
+Exec=/usr/bin/xmodmap /home/paulfantom/.Xmodmap
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=true
+StartupNotify=false

@@ -238,7 +238,8 @@ install_ansible() {
 
     pip install \
     	"$ANSIBLE" \
-        molecule==1.25.1 \
+        molecule \
+        docker \
         testinfra
 }
 
