@@ -72,3 +72,6 @@ fi
 
 # check if there is newer kernel installed
 checkkernel
+
+# ensure proper xmodmap mapping
+(xmodmap | grep locka &>/dev/null) || xmodmap $HOME/.Xmodmap
