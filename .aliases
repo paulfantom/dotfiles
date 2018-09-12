@@ -14,3 +14,5 @@ alias nmon='NMON="cmtu" nmon'
 alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
 alias oc="docker run --rm -it -v oc_cli:/root/.kube paulfantom/openshift-client"
 alias dogo="docker run --rm -v "$(pwd)":/go/src/github.com/openshift/$(basename $(pwd)):Z -w /go/src/github.com/openshift/$(basename $(pwd)) golang:1.10 go"
+alias rdocker="DOCKER_HOST=tcp://nas:2375 docker"
+alias rmolecule="DOCKER_HOST=tcp://nas:2375 molecule"
