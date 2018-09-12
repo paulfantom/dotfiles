@@ -25,7 +25,7 @@ dotfiles: ## Installs the dotfiles.
 	ln -sfn $(CURDIR)/.gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf;
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	git update-index --skip-worktree $(CURDIR)/.gitconfig;
-	ln -snf $(CURDIR)/.fonts $(HOME)/.local/share/fonts;
+#	ln -snf $(CURDIR)/.fonts $(HOME)/.local/share/fonts;
 
 .PHONY: vim
 vim: ## Installs and configures VIM

@@ -127,12 +127,17 @@ base() {
         akregator \
         amarok \
         dragonplayer \
+        k3b* \
         kaddressbook \
         kcalendar \
+        kf5-kcontacts \
         kget \
+        kmahjongg \
         kmail \
+        kmines \
         kontact \
         korganizer \
+        kpat \
         ktp-* \
         kwrite \
         mariadb \
@@ -271,6 +276,7 @@ install_k8s_tools() {
         kubernetes-clients
 
     local VERSION=$(curl --silent "https://api.github.com/repos/kubernetes/minikube/tags" | jq -r '.[0].name')
+    echo "Installing minikube ${VERSION}"
     curl -sSL "https://github.com/kubernetes/minikube/releases/download/${VERSION}/minikube-linux-amd64" > /usr/local/bin/minikube
     chmod +x /usr/local/bin/minikube
     echo "TODO: configure virtualbox and vagrant"

@@ -65,6 +65,9 @@
 	# from seth vargo https://gist.github.com/sethvargo/6b2f7b592853381690bfe3bd00947e8f
 	undo = !git reset HEAD~1 --mixed
 	top = !git log --format=format:%an | sort | uniq -c | sort -r | head -n 20
+	
+	# Update branch with upstream work
+	uu = "!git fetch upstream; git rebase upstream/master"
 
 [apply]
 
