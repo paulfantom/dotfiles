@@ -92,3 +92,25 @@ checkkernel() {
         echo -e "$MSG"
     fi
 }
+
+contain(){
+    CONTAINMENT_CMD='docker run --rm -it -v "$(pwd):/project/$(basename $(pwd))":Z -w /project/$(basename $(pwd))'
+    case "$1" in
+      "origin"|"cigo")
+        docker run --rm -it \
+               -v "$(pwd):/go/src/github.com/openshift/$(basename $(pwd))":Z \
+               -w /go/src/github.com/openshift/$(basename $(pwd)) \
+               openshift/origin-release:golang-1.10 bash
+        ;;
+      *)
+        eval $CONTAINMENT_CMD "$1"
+        ;;
+    esac
+}
+
+shellcheck() {
+    docker run --rm \
+               -v $(pwd):/project:z \
+               -w /project \
+               koalaman/shellcheck-alpine:v0.5.0 shellcheck "${@}"
+}

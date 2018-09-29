@@ -41,6 +41,7 @@ $ make test
 
 ### Based on
 
+- https://github.com/jessfraz/dotfiles
 - https://github.com/gpakosz/.tmux
 - https://github.com/mathiasbynens/dotfiles
 - https://github.com/sheerun/vim-polyglot

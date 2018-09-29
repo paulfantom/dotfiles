@@ -167,6 +167,7 @@ base() {
         powerline \
         powerline-fonts \
         powertop \
+        sg3_utils \
         slack \
         spotify \
         tlp \
@@ -182,6 +183,15 @@ base() {
     install_python
     install_docker
     install_ansible
+}
+
+install_git_lfs() {
+    # install git-lfs
+    GIT_LFS_VERSION=2.5.2
+    curl -sSL "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz" > "/tmp/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz"
+    mkdir /tmp/git-lfs
+    tar -xvf "/tmp/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz" -C /tmp/git-lfs
+    exec /tmp/git-lfs/install.sh
 }
 
 install_scripts() {
@@ -350,6 +360,7 @@ main() {
         install_vagrant
         install_golang
         install_k8s_tools
+        install_git_lfs
         downloads
     elif [[ $cmd == "base" ]]; then
         check_is_sudo

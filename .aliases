@@ -11,7 +11,6 @@ alias nmon='NMON="cmtu" nmon'
 alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
 #alias oc="docker run --rm -it -v /etc/ssl/certs:/etc/ssl/certs:ro -v oc_cli:/root/.kube paulfantom/openshift-client"
 alias oc="docker run --rm -it -v /etc/ssl/certs:/etc/ssl/certs:ro -v $HOME/.kube:/root/.kube:Z paulfantom/openshift-client"
-alias cigo="docker run --rm -it -v "$(pwd)":/go/src/github.com/openshift/$(basename $(pwd)):Z -w /go/src/github.com/openshift/$(basename $(pwd)) openshift/origin-release:golang-1.10 bash"
 alias afk="qdbus org.freedesktop.ScreenSaver /org/freedesktop/ScreenSaver Lock"
 
 alias hollywood="docker run --rm -it jess/hollywood"
