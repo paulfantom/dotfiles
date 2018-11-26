@@ -273,6 +273,7 @@ install_libvirt() {
     dnf install -y \
         libvirt-client \
         libvirt-daemon \
+        libvirt-daemon-config-network \
         libvirt-daemon-kvm \
         virt-install \
         virt-manager
@@ -283,7 +284,7 @@ install_libvirt() {
 
 install_k8s_tools() {
     dnf install -y \
-        kubernetes-clients
+        origin-clients
 
     local VERSION=$(curl --silent "https://api.github.com/repos/kubernetes/minikube/tags" | jq -r '.[0].name')
     echo "Installing minikube ${VERSION}"

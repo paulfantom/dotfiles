@@ -9,12 +9,14 @@ alias diff="colordiff"
 alias lsd='ls --group-directories-first'
 alias nmon='NMON="cmtu" nmon'
 alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
-#alias oc="docker run --rm -it -v /etc/ssl/certs:/etc/ssl/certs:ro -v oc_cli:/root/.kube paulfantom/openshift-client"
-alias oc="docker run --rm -it -v /etc/ssl/certs:/etc/ssl/certs:ro -v $HOME/.kube:/root/.kube:Z paulfantom/openshift-client"
 alias afk="qdbus org.freedesktop.ScreenSaver /org/freedesktop/ScreenSaver Lock"
 
 alias hollywood="docker run --rm -it jess/hollywood"
 
+alias game="wol D0:50:99:9A:F5:8C"
+alias letsplayagame=game
+
+alias kubectl=oc
 alias rdocker="DOCKER_HOST=tcp://nas:2375 docker"
 alias rmolecule="DOCKER_HOST=tcp://nas:2375 molecule"
 
@@ -22,4 +24,8 @@ alias rmolecule="DOCKER_HOST=tcp://nas:2375 molecule"
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="sudo ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'"
 alias ips="sudo ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+alias goland="/opt/GoLand/bin/goland.sh"
+# FIXME temporary git alias
+alias gpush='git push origin $(current_branch)'
 
