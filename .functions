@@ -114,3 +114,10 @@ shellcheck() {
                -w /project \
                koalaman/shellcheck-alpine:v0.5.0 shellcheck "${@}"
 }
+
+
+function current_branch() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+  echo ${ref#refs/heads/}
+}

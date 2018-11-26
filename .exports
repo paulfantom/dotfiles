@@ -40,3 +40,13 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 	GPG_TTY=$(tty)
 	export GPG_TTY
 fi
+
+
+# Libvirt OpenShift installer
+#export OPENSHIFT_INSTALL_PLATFORM=libvirt
+#export OPENSHIFT_INSTALL_BASE_DOMAIN=tt.testing
+#export OPENSHIFT_INSTALL_CLUSTER_NAME=test1
+#export OPENSHIFT_INSTALL_PULL_SECRET_PATH=$HOME/.pull-secret.json
+#export OPENSHIFT_INSTALL_LIBVIRT_URI=qemu+tcp://192.168.122.1/system
+#export OPENSHIFT_INSTALL_EMAIL_ADDRESS="pkrupa@redhat.com"
+#export OPENSHIFT_INSTALL_PASSWORD=password
