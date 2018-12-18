@@ -1,8 +1,8 @@
 ---
 sudo: required
-notifications:
-  email: true
 services:
   - docker
 script:
-  - make test
+  - make test ; exit 1
+notifications:
+  email: true
