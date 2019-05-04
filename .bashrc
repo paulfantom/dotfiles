@@ -73,5 +73,11 @@ fi
 # check if there is newer kernel installed
 checkkernel
 
+# add kubectl bash autocompletion
+source <(kubectl completion bash)
+
+# add doctl bash autocompletion
+source <(doctl completion bash)
+
 # ensure proper xmodmap mapping
 (xmodmap | grep locka &>/dev/null) || xmodmap $HOME/.Xmodmap
