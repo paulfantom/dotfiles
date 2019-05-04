@@ -227,7 +227,7 @@ install_docker() {
     groupadd docker
     gpasswd -a "$TARGET_USER" docker
     systemctl enable docker
-    if [ "$(command -v pip >/dev/null 2>&1)" ]; then
+    if command -v pip >/dev/null 2>&1; then
         pip install docker-compose
     fi
 }
@@ -286,7 +286,8 @@ install_k8s_tools() {
     dnf install -y \
         origin-clients
 
-    local VERSION=$(curl --silent "https://api.github.com/repos/kubernetes/minikube/tags" | jq -r '.[0].name')
+    local VERSION
+    VERSION=$(curl --silent "https://api.github.com/repos/kubernetes/minikube/tags" | jq -r '.[0].name')
     echo "Installing minikube ${VERSION}"
     curl -sSL "https://github.com/kubernetes/minikube/releases/download/${VERSION}/minikube-linux-amd64" > /usr/local/bin/minikube
     chmod +x /usr/local/bin/minikube
@@ -301,7 +302,8 @@ install_golang() {
 }
 
 install_clouds() {
-    local VERSION=$(curl --silent "https://api.github.com/repos/digitalocean/doctl/tags" | jq -r '.[0].name')
+    local VERSION
+    VERSION=$(curl --silent "https://api.github.com/repos/digitalocean/doctl/tags" | jq -r '.[0].name')
     echo "Installing doctl ${VERSION}"
     curl -sSL "https://github.com/digitalocean/doctl/releases/download/${VERSION}/doctl-${VERSION}-linux-amd64.tar.gz" > "/tmp/doctl-${VERSION}-linux-amd64.tar.gz"
     tar -xvf "/tmp/doctl-${VERSION}-linux-amd64.tar.gz"
@@ -360,7 +362,7 @@ main() {
         exit 1
     fi
 
-    if [[ $cmd == "full" ]]; then
+    if [[ "$cmd" == "full" ]]; then
         check_is_sudo
         get_user
         setup_repos
@@ -372,35 +374,35 @@ main() {
         install_k8s_tools
         install_git_lfs
         downloads
-    elif [[ $cmd == "base" ]]; then
+    elif [[ "$cmd" == "base" ]]; then
         check_is_sudo
         get_user
         setup_repos
         base
-    elif [[ $cmd == "golang" ]]; then
+    elif [[ "$cmd" == "golang" ]]; then
         install_golang
-    elif [[ $cmd == "ansible" ]]; then
+    elif [[ "$cmd" == "ansible" ]]; then
         check_is_sudo
         install_ansible "$2"
-    elif [[ $cmd == "scripts" ]]; then
+    elif [[ "$cmd" == "scripts" ]]; then
         check_is_sudo
         install_scripts
-    elif [[ $cmd == "libvirt" ]]; then
+    elif [[ "$cmd" == "libvirt" ]]; then
         check_is_sudo
         get_user
     	install_libvirt
-    elif [[ $cmd == "vagrant" ]]; then
+    elif [[ "$cmd" == "vagrant" ]]; then
         check_is_sudo
         install_vagrant "$2"
-    elif [ $cmd == "k8s" -o $cmd == "kubernetes" -o $cmd == "openshift" ]; then
+    elif [ "$cmd" == "k8s" ] || [ "$cmd" == "kubernetes" ] || [ "$cmd" == "openshift" ]; then
         install_golang
         check_is_sudo
         install_k8s_tools
-    elif [[ $cmd == "downloads" ]]; then
+    elif [[ "$cmd" == "downloads" ]]; then
         check_is_sudo
         get_user
         downloads_tmpfs
-    elif [[ $cmd == "slack" ]]; then
+    elif [[ "$cmd" == "slack" ]]; then
         install_slack
     else
         usage

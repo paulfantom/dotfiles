@@ -2,7 +2,7 @@
 alias vi="vim"
 alias mtr='mtr -o "LRDS N BAW" '
 alias up="sudo dnf update --refresh || sudo zypper up || sudo apt upgrade; notify-send 'System update finished'"
-alias ambilight="python2 $HOME/Development/Programming/ambilight/controller/main.py"
+#alias ambilight="python2 $HOME/Development/Programming/ambilight/controller/main.py"
 alias vlc-fullscreen='dbus-send --print-reply --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Set string:"org.mpris.MediaPlayer2" string:"Fullscreen" variant:boolean:true'
 alias flactomp3='for a in *.flac; do ffmpeg -i "$a" -ab 320k -map_metadata 0 -id3v2_version 3 -qscale:a 0 "${a[@]/%flac/mp3}"; done'
 alias diff="colordiff"

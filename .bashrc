@@ -74,10 +74,12 @@ fi
 checkkernel
 
 # add kubectl bash autocompletion
+# shellcheck source=/dev/null
 source <(kubectl completion bash)
 
 # add doctl bash autocompletion
+# shellcheck source=/dev/null
 source <(doctl completion bash)
 
 # ensure proper xmodmap mapping
-(xmodmap | grep locka &>/dev/null) || xmodmap $HOME/.Xmodmap
+(xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"

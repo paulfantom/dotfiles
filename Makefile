@@ -70,7 +70,7 @@ PHONY: shellcheck
 shellcheck: ## Runs shellcheck tests on the scripts.
 	for file in $(shell find $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-shell ; then echo "$${in}" ; fi ; done); do \
                 f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
-		docker run -v "$(CURDIR):/code:Z" koalaman/shellcheck "/code$$f" && echo -e "\033[32m[OK]\033[0m: sucessfully linted $$f" || ( echo -e "\033[31m[FAIL]\033[0m: linting $$f" && exit 1 );\
+		docker run -v "$(CURDIR):/code:Z" koalaman/shellcheck -f gcc "/code$$f" && echo -e "\033[32m[OK]\033[0m: sucessfully linted $$f" || ( echo -e "\033[31m[FAIL]\033[0m: linting $$f" && exit 1 );\
 	done
 
 PHONY: pylint
