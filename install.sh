@@ -243,7 +243,7 @@ install_python() {
 }
 
 install_ansible() {
-    if [[ ! -z "$1" ]]; then
+    if [[ -n "$1" ]]; then
         ANSIBLE="ansible==$1"
     else
 	ANSIBLE="ansible"
@@ -298,6 +298,15 @@ install_golang() {
 #    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
 #    export GO_SRC=/usr/local/go
     dnf install -y golang
+}
+
+install_clouds() {
+    local VERSION=$(curl --silent "https://api.github.com/repos/digitalocean/doctl/tags" | jq -r '.[0].name')
+    echo "Installing doctl ${VERSION}"
+    curl -sSL "https://github.com/digitalocean/doctl/releases/download/${VERSION}/doctl-${VERSION}-linux-amd64.tar.gz" > "/tmp/doctl-${VERSION}-linux-amd64.tar.gz"
+    tar -xvf "/tmp/doctl-${VERSION}-linux-amd64.tar.gz"
+    mv doctl /usr/local/bin/doctl
+    chmod +x /usr/local/bin/doctl
 }
 
 setup_sudo() {

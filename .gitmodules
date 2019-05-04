@@ -7,6 +7,3 @@
 [submodule ".vim/pack/default/start/ale"]
 	path = .vim/pack/default/start/ale
 	url = https://github.com/w0rp/ale.git
-[submodule ".vim/pack/default/start/vim-wakatime"]
-	path = .vim/pack/default/start/vim-wakatime
-	url = https://github.com/wakatime/vim-wakatime.git
