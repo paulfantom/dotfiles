@@ -11,6 +11,19 @@ for file in ~/.{bash_prompt,aliases,functions,path,dockerfunc,extra,exports}; do
 done
 unset file
 
+# Load secret variables and check their staleness
+if [ -f "$HOME/.secrets/bash_vars" ]; then
+	last_mod=$(date +%s -r "$HOME/.secrets/bash_vars")
+	# rotation every 45 days
+	if [ "$((last_mod + 3888000))" -gt "$(date +%s)" ]; then
+		# shellcheck source=/dev/null
+		source "$HOME/.secrets/bash_vars"
+	else
+		echo -e "\e[1m\e[5m\e[31mALERT! \e[25mCredentials are older than 45 days and were not loaded.\e[0m"
+	fi
+	unset last_mod
+fi
+
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
 
