@@ -12,11 +12,17 @@
 	# `git di $number` shows the diff between the state `$number` revisions ago and the current state
 	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 
+	# Just a simple push
+	p = push
+	
 	# Pull in remote changes for the current repository and all its submodules
-	p = !"git pull; git submodule foreach git pull origin master"
+	pl = !"git pull; git submodule foreach git pull origin master"
 
 	# Checkout a pull request from origin (of a github repository)
 	pr = !"pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
+
+	# Force push with lease
+	pf = push --force-with-lease
 
 	# Clone a repository including all submodules
 	c = clone --recursive
@@ -37,21 +43,6 @@
 
 	# Amend the currently staged files to the latest commit
 	amend = commit --amend --reuse-message=HEAD
-
-	# Interactive rebase with the given number of latest commits
-	reb = "!r() { git rebase -i HEAD~$1; }; r"
-
-	# Find branches containing commit
-	fb = "!f() { git branch -a --contains $1; }; f"
-
-	# Find tags containing commit
-	ft = "!f() { git describe --always --contains $1; }; f"
-
-	# Find commits by source code
-	fc = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
-
-	# Find commits by commit message
-	fm = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
 
 	# Remove branches that have already been merged with master
 	# a.k.a. ‘delete merged’
