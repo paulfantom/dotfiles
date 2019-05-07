@@ -294,6 +294,27 @@ install_k8s_tools() {
     echo "TODO: configure virtualbox and vagrant"
 }
 
+install_monitoring_tools() {
+    local VERSION
+    tmp=$(mktemp -d)
+    echo "Installing promtool"
+    VERSION=$(curl --silent "https://api.github.com/repos/prometheus/prometheus/tags" | jq -r '.[0].name' | sed 's/v//')
+    curl -sSL "https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-amd64.tar.gz" > "${tmp}/prometheus-${VERSION}.linux-amd64.tar.gz"
+    tar -xvf "${tmp}/prometheus-${VERSION}.linux-amd64.tar.gz" -C "${tmp}"
+    cp "${tmp}/prometheus-${VERSION}.linux-amd64/promtool" /usr/local/bin/promtool
+
+    echo "Installing jsonnet"
+    VERSION=$(curl --silent "https://api.github.com/repos/google/jsonnet/tags" | jq -r '.[0].name')
+    curl -sSL "https://github.com/google/jsonnet/archive/${VERSION}.tar.gz" > "${tmp}/jsonnet-${VERSION}.tar.gz"
+    tar -xvf "${tmp}/jsonnet-${VERSION}.tar.gz" -C "${tmp}"
+    here=$(pwd)
+    cd "${tmp}/jsonnet-${VERSION}"
+    make
+    cp jsonnet /usr/local/bin/jsonnet
+    cd "${here}"
+
+}
+
 install_golang() {
 #    export GO_VERSION
 #    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
@@ -372,6 +393,7 @@ main() {
         install_vagrant
         install_golang
         install_k8s_tools
+        install_monitoring_tools
         install_git_lfs
         downloads
     elif [[ "$cmd" == "base" ]]; then
