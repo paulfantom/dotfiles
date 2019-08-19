@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # go path
+#export GOPATH="${HOME}/Projects/go"
 export GOPATH="${HOME}/.go"
 
 # update path

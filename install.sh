@@ -35,6 +35,24 @@ get_user() {
     fi
 }
 
+github_download() {
+    local VERSION, REPO_SLUG, ASSET, TMP_DIR
+    VERSION="$1"
+    REPO_SLUG="$2"
+    ASSET="$3"
+    if [ "$VERSION" == "latest" ]; then
+        VERSION=$(curl --silent "https://api.github.com/repos/${REPO_SLUG}/tags" | jq -r '.[0].name')
+    fi
+    TMP_DIR=$(mktemp -d)
+    mkdir -p "${TMP_DIR}/${REPO_SLUG}"
+    curl -sSL "https://github.com/${REPO_SLUG}/releases/download/${VERSION}/${ASSET}" > "${TMP_DIR}/${REPO_SLUG}/${ASSET}"
+
+    # TODO: Figure out file type and extract if needed
+
+    chmod +x "${TMP_DIR}/${REPO_SLUG}/${ASSET}"
+    mv "${TMP_DIR}/${REPO_SLUG}/${ASSET}" "/usr/local/bin/${REPO_SLUG##*/}"
+}
+
 setup_repos() {
    dnf install -y \
        "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
@@ -260,15 +278,6 @@ install_ansible() {
         testinfra
 }
 
-install_vagrant() {
-    dnf install -y \
-        VirtualBox \
-        vagrant \
-        vagrant-sshfs \
-        vagrant-digitalocean 
-    echo "TODO: configure virtualbox and vagrant"
-}
-
 install_libvirt() {
     dnf install -y \
         libvirt-client \
@@ -286,12 +295,8 @@ install_k8s_tools() {
     dnf install -y \
         origin-clients
 
-    local VERSION
-    VERSION=$(curl --silent "https://api.github.com/repos/kubernetes/minikube/tags" | jq -r '.[0].name')
-    echo "Installing minikube ${VERSION}"
-    curl -sSL "https://github.com/kubernetes/minikube/releases/download/${VERSION}/minikube-linux-amd64" > /usr/local/bin/minikube
-    chmod +x /usr/local/bin/minikube
-    echo "TODO: configure virtualbox and vagrant"
+    github_download "latest" "kubernetes/minikube" "minikube-linux-amd64"
+    github_download "latest" "kubernetes-sigs/kind" "kind-linux-amd64"
 }
 
 install_monitoring_tools() {
@@ -320,6 +325,7 @@ install_golang() {
 #    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
 #    export GO_SRC=/usr/local/go
     dnf install -y golang
+    mkdir -p "/home/$TARGET_USER/Projects/go"
 }
 
 install_clouds() {
@@ -371,7 +377,6 @@ usage() {
     echo "  ansible                             - install ansible and packages"
     echo "  scripts                             - install scripts"
     echo "  libvirt                             - install libvirt"
-    echo "  vagrant                             - install vagrant and virtualbox"
     echo "  downloads                           - use TMPFS for downloads directory"
 }
 
@@ -390,7 +395,6 @@ main() {
         base
         install_scripts
         install_libvirt
-        install_vagrant
         install_golang
         install_k8s_tools
         install_monitoring_tools
@@ -413,9 +417,6 @@ main() {
         check_is_sudo
         get_user
     	install_libvirt
-    elif [[ "$cmd" == "vagrant" ]]; then
-        check_is_sudo
-        install_vagrant "$2"
     elif [ "$cmd" == "k8s" ] || [ "$cmd" == "kubernetes" ] || [ "$cmd" == "openshift" ]; then
         install_golang
         check_is_sudo

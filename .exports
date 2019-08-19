@@ -50,3 +50,6 @@ fi
 #export OPENSHIFT_INSTALL_LIBVIRT_URI=qemu+tcp://192.168.122.1/system
 #export OPENSHIFT_INSTALL_EMAIL_ADDRESS="pkrupa@redhat.com"
 #export OPENSHIFT_INSTALL_PASSWORD=password
+
+# k8s
+export KUBECONFIG="${HOME}/.kube/config"
