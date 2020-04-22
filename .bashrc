@@ -91,5 +91,16 @@ if command -v kind &>/dev/null; then
 	source <(kind completion bash)
 fi
 
+# add direnv variables management
+if command -v direnv &>/dev/null; then
+	# shellcheck source=/dev/null
+	eval "$(direnv hook bash)"
+fi
+
 # ensure proper xmodmap mapping
 (xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"
+
+# Show what I need to do next
+todo
+
+
