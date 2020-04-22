@@ -131,16 +131,100 @@ function up() {
 	notify-send "$msg"
 }
 
-function localcmo() {
-	local IMAGES
-	IMAGES=$(kubectl -n openshift-monitoring get deployment cluster-monitoring-operator -o yaml | grep -o "\-images.*" | tr '\n' ' ')
-	kubectl -n openshift-cluster-version scale --replicas=0 deployment/cluster-version-operator
-	kubectl -n openshift-monitoring scale --replicas=0 deployment/cluster-monitoring-operator
-	#shellcheck disable=SC2086
-	./operator ${IMAGES} -kubeconfig "${KUBECONFIG}" -namespace=openshift-monitoring -configmap=cluster-monitoring-config -logtostderr=true -v=4 2>&1 | grep -v Throttling | tee operator.log
+function clusterbot() {
+	local file
+	#shellcheck disable=SC2012,SC2086
+	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig | head -n1)
+	if [ "$file" == "" ]; then
+		echo "clusterbot kubeconfig file not found"
+	else
+		mv "$file" "$HOME/.kube/config.clusterbot"
+		export KUBECONFIG="$HOME/.kube/config.clusterbot"
+		kubectl get clusterversion
+	fi
 }
 
-function clusterbot() {
-	mv "$HOME/Downloads/cluster-bot-*.kubeconfig" "$HOME/.kube/config"
-	kubectl get clusterversion
+todo() {
+	if [ "$(date +%H)" -gt 18 ] || [ "$(date +%u)" -gt 5 ]; then
+		# After work don't display TODO list
+		return
+	fi
+	if [ -f "$HOME/Notes/TODO" ]; then
+		echo -en "\e[1m\e[32m"
+		echo "Things to do in next days:"
+		echo -en "\e[0m\e[33m"
+		cat "$HOME/Notes/TODO"
+		echo -en "\e[0m"
+	fi
+}
+
+todoedit() {
+	vim "$HOME/Notes/TODO"
+}
+
+e2e() {
+	if [ "$(basename "$(pwd)")" != "prometheus-operator" ]; then
+		echo "Not in prometheus-operator directory"
+		return
+	fi
+	kind delete cluster
+	kind create cluster
+	export KUBECONFIG="$(kind get kubeconfig-path)"
+	make image
+	for n in "operator" "config-reloader"; do
+		kind load docker-image "quay.io/coreos/prometheus-$n:$(git rev-parse --short HEAD)"
+	done
+	until [ "$(kubectl get pods -n kube-system --field-selector=status.phase==Running | wc -l )" -eq 9 ]; do
+		echo "Waiting for cluster to finish bootstraping"
+		sleep 5
+	done
+	make test-e2e
+}
+
+picsort() {
+  exiftool -ext jpg '-FileName<CreateDate' -d %Y_%m_%d__%H_%M_%S%%-c.%%e .
+  X=1
+  for i in *; do
+    mv "$i" "$(printf %04d.%s ${X%.*} "${i##*.}")"
+    X="$((X+1))"
+  done
+}
+
+function timer() {
+	#TODO: better timer which supports seconds precision
+	local length="$1"
+	local suffix
+	case "${length: -1}" in
+	#"s") suffix="seconds";;
+	"m") suffix="minutes";;
+	"h") suffix="seconds";;
+	*) exit 0;;
+	esac
+	at now +${length::-1} $suffix <<< "notify-send \"Timer for $1 finished.\""
+}
+
+function monitor() {
+	local WHICH="$1"
+	local COMMAND="xrandr --output eDP1 --mode 1920x1080 "
+	case "$1" in
+	"lg") PARAMS="--output DP1 --mode 3440x1440 --right-of eDP1" ;;
+	"projector") PARAMS="--output HDMI1 --mode 1920x1080 --right-of eDP1" ;;
+	*) PARAMS="--output DP1 --off --output HDMI1 --off" ;;
+	esac
+	
+	echo "Setting up screens configuration"
+	eval $COMMAND $PARAMS
+	echo "Re-applying screen configuration in 5 second..."
+	sleep 5
+	eval $COMMAND $PARAMS
+}
+
+function sshcopyid() {
+	local host
+	host="$1"
+	ssh-copy-id "$host"
+	for id in $HOME/.ssh/id_*.pub; do
+		echo "$id"
+		ssh-copy-id -f -i "$id" "$host"
+	done
 }
