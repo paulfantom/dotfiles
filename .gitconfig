@@ -60,9 +60,6 @@
 	# Update branch with upstream work
 	uu = "!git fetch upstream; git rebase upstream/master"
 
-	# Checkout PR
-	copr = "!f() { git fetch --force $1 pull/$2/head:pr-$2 && git checkout pr-$2; }; f"
-
 [apply]
 
 	# Detect whitespace errors when applying a patch
@@ -156,7 +153,7 @@
 [includeIf "gitdir:~/Projects/redhat/"]
         path = .gitconfig-work
 
-[includeIf "gitdir:~/.go/src/github.com/openshift"]
+[includeIf "gitdir:~/Projects/go/src/github.com/openshift"]
         path = .gitconfig-work
 
 [commit]
@@ -168,4 +165,5 @@
         smudge = git-lfs smudge -- %f
         process = git-lfs filter-process
         required = true
-
+[format]
+ 	signOff = true
