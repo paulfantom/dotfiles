@@ -15,7 +15,7 @@ alias hollywood="docker run --rm -it jess/hollywood"
 alias game="wol D0:50:99:9A:F5:8C"
 alias letsplayagame=game
 
-#alias kubectl=oc
+alias kubectl=oc
 alias rdocker="DOCKER_HOST=tcp://nas:2375 docker"
 alias rmolecule="DOCKER_HOST=tcp://nas:2375 molecule"
 
@@ -29,3 +29,13 @@ alias goland="/opt/GoLand/bin/goland.sh"
 alias gpush='git push origin $(current_branch)'
 
 alias ocat='/usr/bin/cat'
+
+alias kube-rim="export KUBECONFIG=$HOME/.kube/rim-kubeconfig.yaml"
+alias kube-kind="export KUBECONFIG=$HOME/.kube/kind-cluster-kind.yaml"
+alias kube-ankh="export KUBECONFIG=$HOME/.kube/config.ankhmorpork.yaml"
+alias kube-reset="export KUBECONFIG=$HOME/.kube/cluster.yaml"
+
+alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
+
+alias go13="/usr/local/go-1.13/bin/go"
+alias go14="/usr/local/go-1.14/bin/go"
