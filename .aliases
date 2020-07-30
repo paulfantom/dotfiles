@@ -28,14 +28,19 @@ alias goland="/opt/GoLand/bin/goland.sh"
 # FIXME temporary git alias
 alias gpush='git push origin $(current_branch)'
 
+alias whatidid='vim $HOME/.whatidid'
+alias retro='vim $HOME/.retro'
+
 alias ocat='/usr/bin/cat'
 
 alias kube-rim="export KUBECONFIG=$HOME/.kube/rim-kubeconfig.yaml"
 alias kube-kind="export KUBECONFIG=$HOME/.kube/kind-cluster-kind.yaml"
 alias kube-ankh="export KUBECONFIG=$HOME/.kube/config.ankhmorpork.yaml"
-alias kube-reset="export KUBECONFIG=$HOME/.kube/cluster.yaml"
+alias kube-clusterbot="export KUBECONFIG=$HOME/.kube/config.clusterbot"
+alias kube-reset="export KUBECONFIG=$HOME/.kube/config"
 
 alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
+complete -F __start_oc k
 
 alias go13="/usr/local/go-1.13/bin/go"
 alias go14="/usr/local/go-1.14/bin/go"
