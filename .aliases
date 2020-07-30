@@ -10,14 +10,10 @@ alias nmon='NMON="cmtu" nmon'
 alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
 alias afk="qdbus org.freedesktop.ScreenSaver /org/freedesktop/ScreenSaver Lock"
 
-alias hollywood="docker run --rm -it jess/hollywood"
-
 alias game="wol D0:50:99:9A:F5:8C"
-alias letsplayagame=game
 
 alias kubectl=oc
-alias rdocker="DOCKER_HOST=tcp://nas:2375 docker"
-alias rmolecule="DOCKER_HOST=tcp://nas:2375 molecule"
+alias k=oc
 
 # IP addresses
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -38,9 +34,6 @@ alias kube-kind="export KUBECONFIG=$HOME/.kube/kind-cluster-kind.yaml"
 alias kube-ankh="export KUBECONFIG=$HOME/.kube/config.ankhmorpork.yaml"
 alias kube-clusterbot="export KUBECONFIG=$HOME/.kube/config.clusterbot"
 alias kube-reset="export KUBECONFIG=$HOME/.kube/config"
-
-alias k='kubectl "--context=${KUBECTL_CONTEXT:-$(kubectl config current-context)}" ${KUBECTL_NAMESPACE/[[:alnum:]-]*/--namespace=${KUBECTL_NAMESPACE}}'
-complete -F __start_oc k
 
 alias go13="/usr/local/go-1.13/bin/go"
 alias go14="/usr/local/go-1.14/bin/go"
