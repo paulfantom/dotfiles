@@ -36,7 +36,7 @@ get_user() {
 }
 
 github_download() {
-    local VERSION, REPO_SLUG, ASSET, TMP_DIR
+    local VERSION REPO_SLUG ASSET TMP_DIR
     VERSION="$1"
     REPO_SLUG="$2"
     ASSET="$3"
@@ -45,6 +45,7 @@ github_download() {
     fi
     TMP_DIR=$(mktemp -d)
     mkdir -p "${TMP_DIR}/${REPO_SLUG}"
+    echo "Downloading ${REPO_SLUG}:${VERSION}"
     curl -sSL "https://github.com/${REPO_SLUG}/releases/download/${VERSION}/${ASSET}" > "${TMP_DIR}/${REPO_SLUG}/${ASSET}"
 
     # TODO: Figure out file type and extract if needed
@@ -292,11 +293,8 @@ install_libvirt() {
 }
 
 install_k8s_tools() {
-    dnf install -y \
-        origin-clients
-
-    github_download "latest" "kubernetes/minikube" "minikube-linux-amd64"
     github_download "latest" "kubernetes-sigs/kind" "kind-linux-amd64"
+    # github_download "latest" "ahmetb/kubectx" "???"
 }
 
 install_monitoring_tools() {
@@ -324,7 +322,7 @@ install_golang() {
 #    export GO_VERSION
 #    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
 #    export GO_SRC=/usr/local/go
-    dnf install -y golang
+#    dnf install -y golang
     mkdir -p "/home/$TARGET_USER/Projects/go"
 }
 
