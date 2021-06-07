@@ -3,15 +3,6 @@
 
 function play() { qdbus "org.mpris.MediaPlayer2.$1" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play; }
 function pause() { qdbus "org.mpris.MediaPlayer2.$1" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause; }
-function movie() {
-	vlc-fullscreen || return 1
-	qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl setBrightness 0
-	yakuake-retract
-	pause spotify &>/dev/null
-	play vlc
-	ambilight movie vlc
-	qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl setBrightness "$(qdbus org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement/Actions/BrightnessControl brightnessMax)"
-}
 
 weather() {
 	curl "wttr.in/$1"
@@ -25,14 +16,6 @@ lights_off() {
 	fi
 	xset dpms force off
 	ambilight off
-}
-
-caps() {
-	if [ "$1" == "on" ]; then
-		sudo sh -c "setleds -D +caps < /dev/console"
-	else
-		sudo sh -c "setleds -D -caps < /dev/console"
-	fi
 }
 
 new-alias() {
@@ -74,29 +57,6 @@ checkkernel() {
 	fi
 }
 
-shellcheck() {
-	docker run --rm \
-		-v "$(pwd):/project:z" \
-		-w /project \
-		koalaman/shellcheck-alpine:v0.5.0 shellcheck "${@}"
-}
-
-# Start computing
-function compute() {
-	WHICH="${1}"
-	case $WHICH in
-	"01") MAC="ec:f4:bb:43:a1:e8" ;;
-	*) echo "Ups..." ;;
-	esac
-	HOST="compute${WHICH}"
-	wol "${MAC}"
-	until ping -c 1 "${HOST}" 1>/dev/null 2>&1; do
-		sleep 2
-	done
-	sleep 10
-	ssh "${HOST}"
-}
-
 function gpgreload() {
 	local keyid="0x507ED6F6586DD37F"
 	gpgconf --kill gpg-agent
@@ -108,10 +68,12 @@ function gpgreload() {
 	gpg-connect-agent "scd serialno" "learn --force" /bye >/dev/null 2>&1
 }
 
+# TODO: kubectl plugin ?
 function k8s-show-image() {
 	kubectl get pods --all-namespaces -l app="${1}" -ojsonpath="{.items[*].spec.containers[?(@.name==\"$1\")].image}"
 }
 
+# TODO: kubectl plugin?
 function k8s-po-show-rules() {
 	kubectl -n prometheus-operator-e2e-tests exec -it prometheus-test-0 -c prometheus '/bin/sh -c "cat /etc/prometheus/rules/rules-0/test.rules"'
 }
@@ -129,20 +91,6 @@ function up() {
 	sudo dnf update
 	flatpak update
 	notify-send "$msg"
-}
-
-function clusterbot() {
-	local file
-	#shellcheck disable=SC2012,SC2086
-	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig.txt | head -n1)
-	if [ "$file" == "" ]; then
-		echo "clusterbot kubeconfig file not found"
-	else
-		mv "$file" "$HOME/.kube/config.clusterbot"
-		export KUBECONFIG="$HOME/.kube/config.clusterbot"
-		kubectl get clusterversion
-		export KUBECTL_NAMESPACE="openshift-monitoring"
-	fi
 }
 
 todo() {
@@ -163,6 +111,7 @@ todoedit() {
 	vim "$HOME/Notes/TODO"
 }
 
+# TODO: Improve and move to prometheus-operator repo
 e2e() {
 	if [ "$(basename "$(pwd)")" != "prometheus-operator" ]; then
 		echo "Not in prometheus-operator directory"
@@ -182,6 +131,21 @@ e2e() {
 	make test-e2e
 }
 
+# OpenShift specific
+function clusterbot() {
+	local file
+	#shellcheck disable=SC2012,SC2086
+	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig.txt | head -n1)
+	if [ "$file" == "" ]; then
+		echo "clusterbot kubeconfig file not found"
+	else
+		mv "$file" "$HOME/.kube/config.clusterbot"
+		export KUBECONFIG="$HOME/.kube/config.clusterbot"
+		kubectl get clusterversion
+		export KUBECTL_NAMESPACE="openshift-monitoring"
+	fi
+}
+
 picsort() {
   # exiftool -ext jpg '-FileName<CreateDate' -d %Y_%m_%d__%H_%M_%S%%-c.%%e .
   exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpg "-filename<datetimeoriginal" .
@@ -192,19 +156,6 @@ picsort() {
   #  mv "$i" "$(printf %04d%s ${X%.*} "_${i}")"
   #  X="$((X+1))"
   #done
-}
-
-function timer() {
-	#TODO: better timer which supports seconds precision
-	local length="$1"
-	local suffix
-	case "${length: -1}" in
-	#"s") suffix="seconds";;
-	"m") suffix="minutes";;
-	"h") suffix="seconds";;
-	*) exit 0;;
-	esac
-	at now +${length::-1} $suffix <<< "notify-send \"Timer for $1 finished.\""
 }
 
 function monitor() {
@@ -266,6 +217,7 @@ function image-manifest() {
 	docker manifest push "${img}"
 }
 
+# TODO: Improve image building in prometheus-operator to make this obsolete
 function prom-op-mirroring {
 	local tag="${1}"
 	local branch="${2}"
@@ -277,6 +229,7 @@ function prom-op-mirroring {
 	done
 }
 
+# TODO: Check if still needed. Consider moving to kube-prometheus or tobs
 wrap() {
 local where="${1}"
 local name="${2}"
@@ -295,6 +248,8 @@ $(sed 's/^/  /' < "${where}")
 EOF
 }
 
+# OpenShift specific
+# Simpler version of https://github.com/openshift/cluster-monitoring-operator/blob/master/hack/uwm_setup.sh
 uwm-start() {
 	local TMP, NAMESPACE
 	NAMESPACE=openshift-user-workload-monitoring
@@ -317,6 +272,8 @@ uwm-start() {
 	echo " done"
 }
 
+# OpenShift specific
+# Complementary to uwm-start()
 uwm-stop() {
 	local TMP
 	TMP=$(mktemp -d)
@@ -328,16 +285,6 @@ uwm-stop() {
 	    enableUserWorkload: false
 	EOF
 	oc apply -f "${TMP}/cluster-monitoring-config.yaml"
-}
-
-secret-to-env() {
-  local secret="${1}"
-  export $(kubectl get secret "$secret" -ojson | jq -r ".data | to_entries|map(\"\(.key)=\(.value|tostring|@base64d)\")|.[]")
-}
-
-secret-unset() {
-  local secret="${1}"
-  unset $(kubectl get secret "${secret}" -ojson | jq -r ".data | to_entries|map(\"\(.key)\")|.[]")
 }
 
 diffyaml() {
