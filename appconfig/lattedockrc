@@ -9,6 +9,24 @@ pluginWhiteList=services,desktopsessions,PowerDevil,calculator,unitconverter,she
 [PlasmaThemeExtended]
 outlineWidth=1
 
+[PlasmaTransientsConfig]
+byPassWM=false
+enableKWinEdges=true
+isPreferredForShortcuts=false
+onPrimary=true
+raiseOnActivityChange=false
+raiseOnDesktopChange=false
+timerHide=700
+timerShow=200
+viewType=0
+
+[PlasmaTransientsConfig][Indicator]
+customType=
+enabled=true
+enabledForApplets=true
+padding=0.07999999821186066
+type=org.kde.latte.default
+
 [ScreenConnectors]
 10=eDP-1
 11=HDMI-1
@@ -21,9 +39,9 @@ outlineWidth=1
 [UniversalSettings]
 badges3DStyle=false
 canDisableBorders=false
-currentLayout=paulfantom
+currentLayout=Default
 downloadWindowSize=800,550
-lastNonAssignedLayout=paulfantom
+lastNonAssignedLayout=Default
 launchers=
 layoutsColumnWidths=100,97,71,0
 layoutsWindowSize=700,551
