@@ -15,7 +15,7 @@ install: ## Execute full installation script
 .PHONY: push
 push:
 	git add -A
-	git commit -m '[update] synchronize with upstream $(date)'
+	git commit -m '[update] synchronize with upstream $(shell date)'
 	git push
 
 .PHONY: gpg
