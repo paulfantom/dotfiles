@@ -12,6 +12,12 @@ all: bin install dotfiles gpg appconfig vim etc ## Installs the bin and etc dire
 install: ## Execute full installation script
 	sudo ./install.sh full
 
+.PHONY: push
+push:
+	git add -A
+	git commit -m '[update] synchronize with upstream $(date)'
+	git push
+
 .PHONY: gpg
 gpg:
 	gpg --list-keys || true;
