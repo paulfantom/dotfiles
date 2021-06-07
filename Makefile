@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
-DOTFILES=$(shell find "$(CURDIR)/dots" -name "*")
-APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*")
+DOTFILES=$(shell find "$(CURDIR)/dots" -name "*" -type f)
+APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*" -type f)
 BINSCRIPTS=$(shell find $(CURDIR)/bin -type f)
 ETCFILES=$(shell find $(CURDIR)/etc -type f)
 
@@ -36,12 +36,12 @@ $(BINSCRIPTS):
 .PHONY: dotfiles
 dotfiles: $(DOTFILES)  ## Installs the dotfiles.
 $(DOTFILES):
-	ln -sfn $@ $(HOME)/$(shell basename $@)
+	ln -sfn $@ $(HOME)/.$(shell basename $@)
 
 .PHONY: appconfig
 appconfig: $(APPCONFIG)  ## Install application configuration files
 $(APPCONFIG):
-	ln -sfn $@ $(HOME)/$(shell echo $@ | sed -e 's|$(CURDIR)\/||')
+	ln -sfn "$@" "$(HOME)/$(shell echo $@ | sed -e 's|$(CURDIR)\/app|.|')"
 
 .PHONY: etc
 etc: $(ETCFILES) ## Installs the etc directory files.
