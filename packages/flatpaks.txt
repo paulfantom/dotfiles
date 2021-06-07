@@ -1,0 +1,5 @@
+slack
+spotify
+element
+zoom
+signal

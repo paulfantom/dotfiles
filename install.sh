@@ -59,22 +59,6 @@ setup_repos() {
        "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
        "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
-   cat <<-EOF > /etc/yum.repos.d/negativo-spotify.repo
-	[negativo-spotify]
-	baseurl = http://negativo17.org/repos/spotify/fedora-\$releasever/\$basearch
-	gpgkey = http://negativo17.org/repos/RPM-GPG-KEY-slaanesh
-	name = negativo17 - Spotify
-	skip_if_unavailable = 1
-	EOF
-
-   cat <<-EOF > /etc/yum.repos.d/vivaldi.repo
-	[vivaldi]
-	baseurl = http://repo.vivaldi.com/archive/rpm/x86_64
-	gpgkey = http://repo.vivaldi.com/archive/linux_signing_key.pub
-	name = vivaldi
-	enabled = 1
-	EOF
-
    cat <<-EOF > /etc/yum.repos.d/google-chrome.repo
 	[google-chrome]
 	name=google-chrome
@@ -91,114 +75,21 @@ setup_repos() {
 	name = Docker CE Stable - \$basearch
 	enabled = 1
 	EOF
-
-    cat <<-EOF > /etc/yum.repos.d/slack.repo
-	[slack]
-	name=Slack
-	baseurl=https://packagecloud.io/slacktechnologies/slack/fedora/21/\$basearch
-	repo_gpgcheck=0
-	gpgcheck=0
-	enabled=1
-	gpgkey=https://packagecloud.io/slacktechnologies/slack/gpgkey
-	sslverify=1
-	sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-	metadata_expire=300
-	EOF
-
-}
-
-base_min() {
-    dnf upgrade -y
-    dnf install -y \
-    	automake \
-    	bind-utils \
-        curl \
-        gcc \
-        git \
-        gnupg \
-        gnupg2 \
-        haveged \
-        hdparm \
-        htop \
-        lsof \
-        make \
-        mtr \
-        nmap \
-        pbzip2 \
-        pigz \
-        pv \
-        openssh \
-        tree \
-        unzip \
-        vim \
-        wget \
-        zip
-
-    systemctl enable --now haveged
-    install_scripts
 }
 
 base() {
     ANS="N"
     read -t 30 -r -p "Do you want to remove KDE bloatware? [Y]es/[N]o  " -n 1 ANS || :
     if [[ "$ANS" =~ Y|y ]]; then
-        dnf remove -y \
-        akregator \
-        amarok \
-        dragonplayer \
-        k3b* \
-        kaddressbook \
-        kcalendar \
-        kf5-kcontacts \
-        kget \
-        kmahjongg \
-        kmail \
-        kmines \
-        kontact \
-        korganizer \
-        kpat \
-        ktp-* \
-        kwrite \
-        mariadb \
-        mariadb-* || echo "Bloatware already removed"
+        dnf remove -y $(cat "packages/remove.txt")
     fi
 
-    base_min
-    dnf install -y \
-        bridge-utils \
-        colordiff \
-        exfat-utils \
-        fedora-workstation-repositories \
-        fuse-exfat \
-        google-chrome-stable \
-        jq \
-        kate \
-        keepassxc \
-        latte-dock \
-        libappindicator \
-        libreoffice \
-        libva-intel-driver \
-        libva-utils \
-        lm_sensors \
-        nextcloud-client \
-        nextcloud-client-dolphin \
-        pavucontrol \
-        powerline \
-        powerline-fonts \
-        powertop \
-        sg3_utils \
-        slack \
-        spotify \
-        tlp \
-        vim-powerline \
-        vivaldi-snapshot \
-        vlc \
-        xbindkeys \
-        xmodmap \
-        yakuake
-    
+    dnf install -y $(cat "packages/install.txt")
+
+    systemctl enable --now haveged
     setup_sudo
 
+    install_scripts  
     install_python
     install_docker
     install_ansible
@@ -253,48 +144,11 @@ install_docker() {
 
 install_python() {
     dnf install -y \
-        python{2,3} \
-        python{2,3}-pip \
-        python{2,3}-virtualenv
+        python3 \
+        python3-pip \
+        python3-virtualenv
 
-    pip install --upgrade pip
     pip3 install --upgrade pip || echo "Couldn't upgrade pip3"
-}
-
-install_ansible() {
-    if [[ -n "$1" ]]; then
-        ANSIBLE="ansible==$1"
-    else
-	ANSIBLE="ansible"
-    fi
-
-    command -v pip >/dev/null 2>&1 || install_python
-    
-    dnf install -y python2-netaddr 
-
-    pip install \
-    	"$ANSIBLE" \
-        molecule \
-        docker \
-        testinfra
-}
-
-install_libvirt() {
-    dnf install -y \
-        libvirt-client \
-        libvirt-daemon \
-        libvirt-daemon-config-network \
-        libvirt-daemon-kvm \
-        virt-install \
-        virt-manager
-
-    gpasswd -a "$TARGET_USER" libvirt
-    systemctl enable libvirtd
-}
-
-install_k8s_tools() {
-    github_download "latest" "kubernetes-sigs/kind" "kind-linux-amd64"
-    # github_download "latest" "ahmetb/kubectx" "???"
 }
 
 install_monitoring_tools() {
@@ -316,14 +170,6 @@ install_monitoring_tools() {
     cp jsonnet /usr/local/bin/jsonnet
     cd "${here}"
 
-}
-
-install_golang() {
-#    export GO_VERSION
-#    GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
-#    export GO_SRC=/usr/local/go
-#    dnf install -y golang
-    mkdir -p "/home/$TARGET_USER/Projects/go"
 }
 
 install_clouds() {
@@ -371,7 +217,6 @@ usage() {
     echo "Usage:"
     echo "  full                                - install almost everything"
     echo "  base                                - setup sources & install base pkgs"
-    echo "  golang                              - install golang and packages"
     echo "  ansible                             - install ansible and packages"
     echo "  scripts                             - install scripts"
     echo "  libvirt                             - install libvirt"
@@ -393,8 +238,6 @@ main() {
         base
         install_scripts
         install_libvirt
-        install_golang
-        install_k8s_tools
         install_monitoring_tools
         install_git_lfs
         downloads
@@ -403,8 +246,6 @@ main() {
         get_user
         setup_repos
         base
-    elif [[ "$cmd" == "golang" ]]; then
-        install_golang
     elif [[ "$cmd" == "ansible" ]]; then
         check_is_sudo
         install_ansible "$2"
@@ -416,9 +257,7 @@ main() {
         get_user
     	install_libvirt
     elif [ "$cmd" == "k8s" ] || [ "$cmd" == "kubernetes" ] || [ "$cmd" == "openshift" ]; then
-        install_golang
         check_is_sudo
-        install_k8s_tools
     elif [[ "$cmd" == "downloads" ]]; then
         check_is_sudo
         get_user

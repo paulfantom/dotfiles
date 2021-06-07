@@ -52,6 +52,25 @@ $(ETCFILES):
 	systemctl --user daemon-reload || true
 	sudo systemctl daemon-reload
 
+.PHONY: golang
+GOLANG_VERSION?=1.16.5
+golang: /usr/local/go$(GOLANG_VERSION)
+	mkdir -p "$(HOME)/Projects/go"
+
+/usr/local/go$(GOLANG_VERSION):
+	mkdir /tmp/golang$(GOLANG_VERSION)
+	wget "https://golang.org/dl/go$(GOLANG_VERSION).linux-amd64.tar.gz" -O "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
+	tar -C "/tmp/golang$(GOLANG_VERSION)" -xzf "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
+	sudo mv "/tmp/golang$(GOLANG_VERSION)/go" "/usr/local/go$(GOLANG_VERSION)"
+	sudo ln -snf "/usr/local/go$(GOLANG_VERSION)" "/usr/local/go"
+
+.PHONY: kind
+KIND_VERSION?=latest
+kind:
+	curl -Lo /tmp/kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-linux-amd64
+	chmod +x /tmp/kind
+	sudo mv /tmp/kind /usr/local/bin/kind
+
 .PHONY: test
 test: shellcheck ## Runs all the tests on the files in the repository.
 
