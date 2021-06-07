@@ -10,10 +10,11 @@ alias nmon='NMON="cmtu" nmon'
 alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
 alias afk="qdbus org.freedesktop.ScreenSaver /org/freedesktop/ScreenSaver Lock"
 
-alias game="wol D0:50:99:9A:F5:8C"
 
-alias kubectl=oc
-alias k=oc
+if ! command -v oc &>/dev/null; then
+	alias oc=kubectl
+fi
+alias k=kubectl
 
 # IP addresses
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -29,6 +30,8 @@ alias retro='vim $HOME/.retro'
 
 alias ocat='/usr/bin/cat'
 
+alias kube-lint="kube-linter lint"
+
 alias kube-rim="export KUBECONFIG=$HOME/.kube/rim-kubeconfig.yaml"
 alias kube-kind="export KUBECONFIG=$HOME/.kube/kind-cluster-kind.yaml"
 alias kube-ankh="export KUBECONFIG=$HOME/.kube/config.ankhmorpork.yaml"
@@ -37,3 +40,8 @@ alias kube-reset="export KUBECONFIG=$HOME/.kube/config"
 
 alias go13="/usr/local/go-1.13/bin/go"
 alias go14="/usr/local/go-1.14/bin/go"
+alias go15="/usr/local/go-1.15/bin/go"
+alias go16="/usr/local/go-1.16/bin/go"
+
+alias gamingpc="wol 24:4b:fe:89:cf:ab"
+alias aduspc="wol d0:50:99:9a:f5:8c"

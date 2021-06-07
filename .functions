@@ -119,13 +119,13 @@ function k8s-po-show-rules() {
 
 function up() {
 	local msg="System update finished."
-	if [ "$(dnf check-update --refresh 2>/dev/null | grep -c "grub\|kernel")" -gt 0 ]; then
-		msg="$msg Reboot is required."
-		if find -- "/boot" -prune -type d -empty | grep -q .; then
-			echo "Cannot update system since /boot is empty."
-			exit 1
-		fi
-	fi
+	#if [ "$(dnf check-update --refresh 2>/dev/null | grep -c "grub\|kernel")" -gt 0 ]; then
+	#	msg="$msg Reboot is required."
+	#	if find -- "/boot" -prune -type d -empty | grep -q .; then
+	#		echo "Cannot update system since /boot is empty."
+	#		exit 1
+	#	fi
+	#fi
 	sudo dnf update
 	flatpak update
 	notify-send "$msg"
@@ -134,7 +134,7 @@ function up() {
 function clusterbot() {
 	local file
 	#shellcheck disable=SC2012,SC2086
-	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig | head -n1)
+	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig.txt | head -n1)
 	if [ "$file" == "" ]; then
 		echo "clusterbot kubeconfig file not found"
 	else
@@ -183,12 +183,15 @@ e2e() {
 }
 
 picsort() {
-  exiftool -ext jpg '-FileName<CreateDate' -d %Y_%m_%d__%H_%M_%S%%-c.%%e .
-  X=1
-  for i in *; do
-    mv "$i" "$(printf %04d.%s ${X%.*} "${i##*.}")"
-    X="$((X+1))"
-  done
+  # exiftool -ext jpg '-FileName<CreateDate' -d %Y_%m_%d__%H_%M_%S%%-c.%%e .
+  exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpg "-filename<datetimeoriginal" .
+  exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpeg "-filename<datetimeoriginal" .
+  #X=1
+  #for i in *; do
+  #  # mv "$i" "$(printf %04d.%s ${X%.*} "${i##*.}")"
+  #  mv "$i" "$(printf %04d%s ${X%.*} "_${i}")"
+  #  X="$((X+1))"
+  #done
 }
 
 function timer() {
@@ -224,7 +227,7 @@ function sshcopyid() {
 	local host
 	host="$1"
 	ssh-copy-id "$host"
-	for id in $HOME/.ssh/id_*.pub; do
+	for id in "$HOME/.ssh/id_rsa.pub" "$HOME/.ssh/ankhmorpork.pub"; do
 		echo "$id"
 		ssh-copy-id -f -i "$id" "$host"
 	done
@@ -237,7 +240,7 @@ function buildx-init() {
 }
 
 function buildx-cross() {
-	image=${1}
+	local image=${1}
 	for arch in amd64 arm64 arm; do
 		docker buildx build --platform linux/${arch} -t "${image}-${arch}" --load .
 		docker push "${image}-${arch}"
@@ -245,3 +248,98 @@ function buildx-cross() {
 	manifest-tool push from-args --platforms linux/amd64,linux/arm64,linux/arm  --template "${image}-ARCH" --target "${image}"
 }
 
+function image-reupload() {
+	local src=${1}
+	local dst=${2}
+
+	docker pull "${src}"
+	docker tag "${src}" "${dst}"
+	docker push "${dst}"
+}
+
+function image-manifest() {
+	local img="${1}"
+	docker manifest create -a "${img}" "${img}-amd64" "${img}-arm64" "${img}-arm"
+	for arch in amd64 arm64 arm; do
+		docker manifest annotate --arch "$arch" "${img}" "${img}-$arch"
+	done
+	docker manifest push "${img}"
+}
+
+function prom-op-mirroring {
+	local tag="${1}"
+	local branch="${2}"
+	for img in quay.io/prometheus-operator/prometheus-operator quay.io/coreos/prometheus-operator quay.io/prometheus-operator/prometheus-config-reloader quay.io/coreos/prometheus-config-reloader; do
+		for arch in amd64 arm64 arm; do
+			image-reupload "${img}-dev:${branch}-${arch}" "${img}:${tag}-${arch}"
+			image-manifest "${img}:${tag}"
+		done
+	done
+}
+
+wrap() {
+local where="${1}"
+local name="${2}"
+	
+cat << EOF
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: ${name}
+  namespace: monitoring
+spec:
+$(sed 's/^/  /' < "${where}")
+EOF
+}
+
+uwm-start() {
+	local TMP, NAMESPACE
+	NAMESPACE=openshift-user-workload-monitoring
+	TMP=$(mktemp -d)
+	oc create configmap cluster-monitoring-config -n openshift-monitoring
+	oc get configmap cluster-monitoring-config -n openshift-monitoring -o yaml > "${TMP}/cluster-monitoring-config.yaml"
+	cat <<-EOF >> "${TMP}/cluster-monitoring-config.yaml"
+	data:
+	  config.yaml: |
+	    enableUserWorkload: true
+	EOF
+	oc apply -f "${TMP}/cluster-monitoring-config.yaml"
+	echo -n "Waiting for OpenShift user workload monitoring Pods."
+	while [[ "$(oc get pods -n ${NAMESPACE} --field-selector=status.phase!=Running 2>/dev/null | wc -l)" -gt 1 ]] || \
+	      [[ "$(oc get pods -n ${NAMESPACE} 2>/dev/null | grep -sc 'prometheus-user-workload')" -lt 1 ]] || \
+	      [[ "$(oc get pods -n ${NAMESPACE} 2>/dev/null | grep -sc 'thanos-ruler-user-workload')" -lt 1 ]]; do
+		echo -n "."
+		sleep 5
+	done
+	echo " done"
+}
+
+uwm-stop() {
+	local TMP
+	TMP=$(mktemp -d)
+	oc create configmap cluster-monitoring-config -n openshift-monitoring
+	oc get configmap cluster-monitoring-config -n openshift-monitoring -o yaml > "${TMP}/cluster-monitoring-config.yaml"
+	cat <<-EOF >> "${TMP}/cluster-monitoring-config.yaml"
+	data:
+	  config.yaml: |
+	    enableUserWorkload: false
+	EOF
+	oc apply -f "${TMP}/cluster-monitoring-config.yaml"
+}
+
+secret-to-env() {
+  local secret="${1}"
+  export $(kubectl get secret "$secret" -ojson | jq -r ".data | to_entries|map(\"\(.key)=\(.value|tostring|@base64d)\")|.[]")
+}
+
+secret-unset() {
+  local secret="${1}"
+  unset $(kubectl get secret "${secret}" -ojson | jq -r ".data | to_entries|map(\"\(.key)\")|.[]")
+}
+
+diffyaml() {
+  yamldiff --file1 "${1}" --file2 "${2}"
+}

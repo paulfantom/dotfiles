@@ -1,5 +1,4 @@
 [alias]
-
 	# View abbreviated SHA, description, and history graph of the latest 20 commits
 	l = log --pretty=oneline -n 20 --graph --abbrev-commit
 
@@ -19,7 +18,8 @@
 	pl = !"git pull; git submodule foreach git pull origin master"
 
 	# Checkout a pull request from origin (of a github repository)
-	pr = !"pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
+	#pr = !"pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
+	pr = "!f() { git fetch -fu ${2:-$(git remote |grep ^upstream || echo origin)} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
 
 	# Force push with lease
 	pf = push --force-with-lease
@@ -33,6 +33,9 @@
 	# Switch to a branch, creating it if necessary
 	go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
+	# Commit and sign
+	cm = commit -s
+
 	# Color graph log view
 	graph = log --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
 
@@ -42,7 +45,7 @@
 	remotes = remote -v
 
 	# Amend the currently staged files to the latest commit
-	amend = commit --amend --reuse-message=HEAD
+	amend = commit -s --amend --reuse-message=HEAD
 
 	# Remove branches that have already been merged with master
 	# a.k.a. ‘delete merged’
@@ -58,15 +61,16 @@
 	top = !git log --format=format:%an | sort | uniq -c | sort -r | head -n 20
 	
 	# Update branch with upstream work
-	uu = "!git fetch upstream; git rebase upstream/master"
+	uu = "!git fetch upstream; git rebase upstream/$(git remote show upstream | awk '/HEAD branch/ {print $NF}')"
+
+	# Last commit
+	last = log -1 HEAD --stat
 
 [apply]
-
 	# Detect whitespace errors when applying a patch
 	whitespace = fix
 
 [core]
-
 	# Use custom `.gitignore` and `.gitattributes`
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
@@ -82,42 +86,35 @@
 	editor = vim
 
 [color]
-
 	# Use colors in Git commands that are capable of colored output when
 	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
 	ui = auto
 
 [color "branch"]
-
 	current = yellow reverse
 	local = yellow
 	remote = green
 
 [color "diff"]
-
 	meta = yellow bold
 	frag = magenta bold # line info
 	old = red # deletions
 	new = green # additions
 
 [color "status"]
-
 	added = yellow
 	changed = green
 	untracked = cyan
 
 [diff]
-
 	# Detect copies as well as renames
 	renames = copies
 
 [help]
-
 	# Automatically correct and execute mistyped commands
-	autocorrect = 1
+	autocorrect = 5
 
 [merge]
-
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
 
@@ -146,7 +143,7 @@
 	insteadOf = "gist:"
 
 [user]
-        email = pawel@krupa.net.pl
+	email = pawel@krupa.net.pl
         name = paulfantom
         signingkey = 0x12AE0185401674E7
 
@@ -166,4 +163,8 @@
         process = git-lfs filter-process
         required = true
 [format]
- 	signOff = true
+	signoff = true
+[pull]
+	ff = only
+[init]
+	defaultBranch = main

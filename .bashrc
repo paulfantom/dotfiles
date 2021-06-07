@@ -91,6 +91,18 @@ if command -v kind &>/dev/null; then
 	source <(kind completion bash)
 fi
 
+# add o-must-gather bash autocompletion
+if command -v omg &>/dev/null; then
+	# shellcheck source=/dev/null
+	source <(omg completion bash)
+fi
+
+if command -v kubecolor &>/dev/null; then
+  alias kubectl="kubecolor"
+  # autocomplete for kubecolor
+  complete -o default -F __start_kubectl kubecolor
+fi
+
 # ensure proper xmodmap mapping
 (xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"
 
