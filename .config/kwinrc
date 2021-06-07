@@ -1,26 +1,66 @@
+[$Version]
+update_info=kwin.upd:replace-scalein-with-scale,kwin.upd:port-minimizeanimation-effect-to-js,kwin.upd:port-scale-effect-to-js,kwin.upd:port-dimscreen-effect-to-js,kwin.upd:auto-bordersize,kwin.upd:animation-speed
+
 [Compositing]
 OpenGLIsUnsafe=false
 
 [Desktops]
+Id_1=0cd5d427-cd8c-4aae-8f26-4abd9c0a54f6
 Number=1
+Rows=1
 
 [Effect-CoverSwitch]
 TabBox=false
 TabBoxAlternative=false
 
+[Effect-Cube]
+BorderActivate=9
+BorderActivateCylinder=9
+BorderActivateSphere=9
+
+[Effect-DesktopGrid]
+BorderActivate=9
+
 [Effect-FlipSwitch]
 TabBox=false
 TabBoxAlternative=false
 
+[Effect-PresentWindows]
+BorderActivate=9
+BorderActivateAll=3,7
+BorderActivateClass=9
+
 [Effect-Zoom]
 InitialZoom=1
 
+[ElectricBorders]
+Bottom=None
+BottomLeft=None
+BottomRight=None
+Left=None
+Right=None
+Top=None
+TopLeft=None
+TopRight=None
+
+[NightColor]
+Active=true
+NightTemperature=3500
+
 [Plugins]
+activatelattelaunchermenuEnabled=false
+enforcedecoEnabled=true
 highlightwindowEnabled=true
+minimizeallEnabled=false
+sticky-window-snappingEnabled=true
+synchronizeskipswitcherEnabled=false
+videowallEnabled=false
 
 [TabBox]
 ActivitiesMode=1
 ApplicationsMode=0
+BorderActivate=9
+BorderAlternativeActivate=9
 DesktopLayout=org.kde.breeze.desktop
 DesktopListLayout=org.kde.breeze.desktop
 DesktopMode=1
@@ -44,8 +84,17 @@ ShowDesktopMode=0
 ShowTabBox=true
 SwitchingMode=0
 
+[Windows]
+ElectricBorderCooldown=350
+ElectricBorderCornerRatio=0.33
+ElectricBorderDelay=150
+ElectricBorderMaximize=true
+ElectricBorderTiling=true
+ElectricBorders=0
+
 [org.kde.kdecoration2]
 BorderSize=Normal
+BorderSizeAuto=false
 ButtonsOnLeft=MS
 ButtonsOnRight=HIAX
 CloseOnDoubleClickOnMenu=false

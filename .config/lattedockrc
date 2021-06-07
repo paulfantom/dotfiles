@@ -1,15 +1,36 @@
+[KPropertiesDialog]
+Height 1080=449
+Width 1920=450
+
 [PlasmaRunnerManager]
-LaunchCounts=1 services_vivaldi-snapshot.desktop,1 services_slack.desktop
-pluginWhiteList=services,desktopsessions,PowerDevil,shell,bookmarks,baloosearch,locations
+LaunchCounts=1 services_code.desktop,1 services_nextcloud.desktop,1 services_google-chrome.desktop,1 services_com.teamviewer.TeamViewer.desktop,1 services_com.slack.Slack.desktop,3 services_slack.desktop,3 services_systemsettings.desktop,1 services_pavucontrol.desktop,1 services_org.kde.dolphin.desktop,3 services_org.kde.kate.desktop,1 PowerDevil_Suspend,4 services_org.kde.yakuake.desktop,2 services_vivaldi-snapshot.desktop,2 desktopsessions_3,1 services_kcm_kscreen.desktop
+pluginWhiteList=services,desktopsessions,PowerDevil,calculator,unitconverter,shell,bookmarks,baloosearch,locations
+
+[PlasmaThemeExtended]
+outlineWidth=1
 
 [ScreenConnectors]
 10=eDP-1
 11=HDMI-1
+12=DP-1
+13=eDP1
+14=DP1
+15=HDMI1
+16=DP2
 
 [UniversalSettings]
+badges3DStyle=false
+canDisableBorders=false
 currentLayout=paulfantom
+downloadWindowSize=800,550
 lastNonAssignedLayout=paulfantom
 launchers=
-layoutsWindowSize=700,450
+layoutsColumnWidths=100,97,71,0
+layoutsWindowSize=700,551
+memoryUsage=0
+metaPressAndHoldEnabled=true
+mouseSensitivity=2
+screenTrackerInterval=2500
 showInfoWindow=true
+unifiedGlobalShortcuts=true
 version=2
