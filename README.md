@@ -1,6 +1,6 @@
 ## dotfiles
 
-[![Travis CI](https://travis-ci.org/paulfantom/dotfiles.svg?branch=master)](https://travis-ci.org/paulfantom/dotfiles)
+![CI tests](https://github.com/paulfantom/dotfiles/actions/workflows/test.yaml/badge.svg)
 
 **To install:**
 
@@ -32,8 +32,7 @@ git config --global github.user "$GH_USER"
 
 ### Tests
 
-The tests use [shellcheck](https://github.com/koalaman/shellcheck) and [pylint](https://www.pylint.org/). You don't
-need to install anything. They run in a container.
+The tests use [shellcheck](https://github.com/koalaman/shellcheck) which needs to be preinstalled.
 
 ```console
 $ make test
@@ -51,6 +50,3 @@ $ make test
 ### TODO
 
 - Full KDE configuration
-- golang installation
-- libvirt configuration
-- vagrant and virtualbox configuration
