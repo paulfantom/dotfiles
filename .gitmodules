@@ -1,9 +1,9 @@
-[submodule ".vim/pack/default/start/vim-jinja"]
-	path = .vim/pack/default/start/vim-jinja
+[submodule "vim/pack/default/start/vim-jinja"]
+	path = vim/pack/default/start/vim-jinja
 	url = https://github.com/lepture/vim-jinja.git
-[submodule ".vim/pack/default/start/vim-polyglot"]
-	path = .vim/pack/default/start/vim-polyglot
+[submodule "vim/pack/default/start/vim-polyglot"]
+	path = vim/pack/default/start/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot.git
-[submodule ".vim/pack/default/start/ale"]
-	path = .vim/pack/default/start/ale
+[submodule "vim/pack/default/start/ale"]
+	path = vim/pack/default/start/ale
 	url = https://github.com/w0rp/ale.git

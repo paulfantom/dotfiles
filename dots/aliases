@@ -1,9 +1,10 @@
 #!/bin/bash
+# shellcheck disable=SC2139
+
 alias vi="vim"
 alias mtr='mtr -o "LRDS N BAW" '
 #alias ambilight="python2 $HOME/Development/Programming/ambilight/controller/main.py"
 alias vlc-fullscreen='dbus-send --print-reply --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Set string:"org.mpris.MediaPlayer2" string:"Fullscreen" variant:boolean:true'
-alias flactomp3='for a in *.flac; do ffmpeg -i "$a" -ab 320k -map_metadata 0 -id3v2_version 3 -qscale:a 0 "${a[@]/%flac/mp3}"; done'
 alias diff="colordiff"
 alias lsd='ls --group-directories-first'
 alias nmon='NMON="cmtu" nmon'
@@ -32,11 +33,11 @@ alias ocat='/usr/bin/cat'
 
 alias kube-lint="kube-linter lint"
 
-alias kube-rim="export KUBECONFIG=$HOME/.kube/rim-kubeconfig.yaml"
-alias kube-kind="export KUBECONFIG=$HOME/.kube/kind-cluster-kind.yaml"
-alias kube-ankh="export KUBECONFIG=$HOME/.kube/config.ankhmorpork.yaml"
-alias kube-clusterbot="export KUBECONFIG=$HOME/.kube/config.clusterbot"
-alias kube-reset="export KUBECONFIG=$HOME/.kube/config"
+alias kube-rim="export KUBECONFIG=${HOME}/.kube/rim-kubeconfig.yaml"
+alias kube-kind="export KUBECONFIG=${HOME}/.kube/kind-cluster-kind.yaml"
+alias kube-ankh="export KUBECONFIG=${HOME}/.kube/config.ankhmorpork.yaml"
+alias kube-clusterbot="export KUBECONFIG=${HOME}/.kube/config.clusterbot"
+alias kube-reset="export KUBECONFIG=${HOME}/.kube/config"
 
 alias go13="/usr/local/go-1.13/bin/go"
 alias go14="/usr/local/go-1.14/bin/go"

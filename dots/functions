@@ -119,7 +119,8 @@ e2e() {
 	fi
 	kind delete cluster
 	kind create cluster
-	export KUBECONFIG="$(kind get kubeconfig-path)"
+	export KUBECONFIG
+	KUBECONFIG="$(kind get kubeconfig-path)"
 	make image
 	for n in "operator" "config-reloader"; do
 		kind load docker-image "quay.io/coreos/prometheus-$n:$(git rev-parse --short HEAD)"
@@ -159,7 +160,6 @@ picsort() {
 }
 
 function monitor() {
-	local WHICH="$1"
 	local COMMAND="xrandr --output eDP1 --mode 1920x1080 "
 	case "$1" in
 	"lg") PARAMS="--output DP1 --mode 3440x1440 --right-of eDP1" ;;
@@ -168,10 +168,10 @@ function monitor() {
 	esac
 	
 	echo "Setting up screens configuration"
-	eval $COMMAND $PARAMS
+	eval "${COMMAND} ${PARAMS}"
 	echo "Re-applying screen configuration in 5 second..."
 	sleep 5
-	eval $COMMAND $PARAMS
+	eval "${COMMAND} ${PARAMS}"
 }
 
 function sshcopyid() {
