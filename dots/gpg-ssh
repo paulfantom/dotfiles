@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Everything related to gpg and ssh
+
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# if it's an ssh session export GPG_TTY
+if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+	GPG_TTY=$(tty)
+	export GPG_TTY
+fi
+
+# use a tty for gpg
+# solves error: "gpg: signing failed: Inappropriate ioctl for device"
+GPG_TTY=$(tty)
+export GPG_TTY
+# Start the gpg-agent if not already running
+if ! pgrep -x -u "${USER}" gpg-agent >/dev/null 2>&1; then
+    gpg-connect-agent /bye >/dev/null 2>&1
+    gpg-connect-agent updatestartuptty /bye >/dev/null
+fi
+# Set SSH to use gpg-agent
+unset SSH_AGENT_PID
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+    export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
+fi
+# add alias for ssh to update the tty
+alias ssh="gpg-connect-agent updatestartuptty /bye >/dev/null; ssh"
+
+# Add tab completion for SSH hostnames based on ~/.ssh/config
+# ignoring wildcards
+[[ -e "$HOME/.ssh/config" ]] && complete -o "default" \
+	-o "nospace" \
+	-W "$(grep "^Host" ~/.ssh/config | \
+	grep -v "[?*]" | cut -d " " -f2 | \
+	tr ' ' '\n')" scp sftp ssh
+
+function sshcopyid() {
+	local host
+	host="$1"
+	ssh-copy-id "$host"
+	for id in "$HOME/.ssh/id_rsa.pub" "$HOME/.ssh/ankhmorpork.pub"; do
+		echo "$id"
+		ssh-copy-id -f -i "$id" "$host"
+	done
+}
+
+function gpgreload() {
+	local keyid="0x507ED6F6586DD37F"
+	gpgconf --kill gpg-agent
+	# shellcheck disable=SC2164
+	( cd "$(gpgconf --list-dirs homedir)/private-keys-v1.d"; 
+	gpg2 -K --with-keygrip --with-colons "$keyid" | \
+	awk -F: '/^grp/ { print $10".key"; }' | \
+	xargs rm -vf >/dev/null; )
+	gpg-connect-agent "scd serialno" "learn --force" /bye >/dev/null 2>&1
+}

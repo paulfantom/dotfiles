@@ -29,16 +29,5 @@ export TODOTXT_DEFAULT_ACTION=ls
 #export GDK_DPI_SCALE=0.5
 #export QT_DEVICE_PIXEL_RATIO=2
 
-export GO111MODULE=on
-export GOROOT=/usr/local/go
-export PATH=${PATH}:/usr/local/go/bin
-
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-# if it's an ssh session export GPG_TTY
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-	GPG_TTY=$(tty)
-	export GPG_TTY
-fi
-
 
 
