@@ -38,4 +38,3 @@ repositories: /etc/yum.repos.d/google-chrome.repo /etc/yum.repos.d/rpmfusion-non
 /etc/yum.repos.d/rpmfusion-nonfree.repo:
 	dnf install -y "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(shell rpm -E %fedora).noarch.rpm"
 
-

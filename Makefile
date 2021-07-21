@@ -11,6 +11,7 @@ all: bin install dotfiles gpg appconfig vim etc tools ## Installs the bin and et
 .PHONY: install
 install:  ## Install system packages and configure repositories
 	sudo $(MAKE) -C packages all
+	# flatpak install $(shell cat packages/flatpaks.txt)
 
 .PHONY: tools
 tools:  ## Install all external developer tools
