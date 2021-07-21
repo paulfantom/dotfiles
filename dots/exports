@@ -33,8 +33,6 @@ export GO111MODULE=on
 export GOROOT=/usr/local/go
 export PATH=${PATH}:/usr/local/go/bin
 
-#export DOCKER_CONTENT_TRUST=1
-
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # if it's an ssh session export GPG_TTY
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
@@ -43,16 +41,4 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 fi
 
 
-# Libvirt OpenShift installer
-#export OPENSHIFT_INSTALL_PLATFORM=libvirt
-#export OPENSHIFT_INSTALL_BASE_DOMAIN=tt.testing
-#export OPENSHIFT_INSTALL_CLUSTER_NAME=test1
-#export OPENSHIFT_INSTALL_PULL_SECRET_PATH=$HOME/.pull-secret.json
-#export OPENSHIFT_INSTALL_LIBVIRT_URI=qemu+tcp://192.168.122.1/system
-#export OPENSHIFT_INSTALL_EMAIL_ADDRESS="pkrupa@redhat.com"
-#export OPENSHIFT_INSTALL_PASSWORD=password
 
-# k8s
-export KUBECONFIG="${HOME}/.kube/config"
-
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"

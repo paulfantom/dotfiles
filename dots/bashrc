@@ -73,29 +73,10 @@ fi
 # check if there is newer kernel installed
 checkkernel
 
-# add kubectl bash autocompletion
-if command -v kubectl &>/dev/null; then
-	# shellcheck source=/dev/null
-	source <(kubectl completion bash)
-	complete -F __start_kubectl k
-fi
-
 # add doctl bash autocompletion
 if command -v doctl &>/dev/null; then
 	# shellcheck source=/dev/null
 	source <(doctl completion bash)
-fi
-
-# add doctl bash autocompletion
-if command -v kind &>/dev/null; then
-	# shellcheck source=/dev/null
-	source <(kind completion bash)
-fi
-
-if command -v kubecolor &>/dev/null; then
-  alias kubectl="kubecolor"
-  # autocomplete for kubecolor
-  complete -o default -F __start_kubectl kubecolor
 fi
 
 # ensure proper xmodmap mapping

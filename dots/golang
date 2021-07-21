@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# go path
+export GOPATH="${HOME}/Projects/go"
+
+# update path
+export PATH=/usr/local/bin:/usr/local/go/bin:${PATH}:${GOPATH}/bin:/sbin
+
+export CDPATH=${CDPATH}:$GOPATH/src/github.com:$GOPATH/src/golang.org:$GOPATH/src
+
+alias goland="/opt/GoLand/bin/goland.sh"
+
+alias go13="/usr/local/go-1.13/bin/go"
+alias go14="/usr/local/go-1.14/bin/go"
+alias go15="/usr/local/go-1.15/bin/go"
+alias go16="/usr/local/go-1.16/bin/go"
+
+
