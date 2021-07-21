@@ -58,6 +58,15 @@ $(ETCFILES):
 	systemctl --user daemon-reload || true
 	sudo systemctl daemon-reload
 
+.PHONY: fonts
+fonts: /usr/share/fonts/comicmono
+	fc-cache -v
+
+/usr/share/fonts/comicmono:
+	sudo mkdir -p /usr/share/fonts/comicmono
+	sudo wget https://dtinth.github.io/comic-mono-font/ComicMono.ttf -O /usr/share/fonts/comicmono/ComicMono.ttf
+	sudo wget https://dtinth.github.io/comic-mono-font/ComicMono-Bold.ttf -O /usr/share/fonts/comicmono/ComicMono-Bold.ttf
+
 .PHONY: golang
 GOLANG_VERSION?=1.16.5
 golang: /usr/local/go$(GOLANG_VERSION)

@@ -150,13 +150,16 @@ Size=32
 
 [DirSelect Dialog]
 DirSelectDialog Size=852,596
-History Items[$e]=file:$HOME/Pictures/Dark and Cranes,file:$HOME/Pictures/Dark and Cranes,file:$HOME/Pictures/adus-bln,file:$HOME/Pictures/cedynia,file:$HOME/Pictures/airport,file:$HOME/Pictures/Kili_pics,file:$HOME/Pictures/Kilimanjaro/Maciek/Lumix,file:$HOME/Pictures/Kilimanjaro,file:$HOME/Pictures/Kompromitujace zdjecia Adrianny,file:$HOME/Pictures/Berlin - 2020-07,file:$HOME/Pictures/Zamosc - Zwierzyniec - Gorecko,file:$HOME/Pictures/cedynia,file:$HOME/Pictures/Werneuchen flugplatz,file:$HOME/Pictures/Schoenower Heide,file:$HOME/Pictures/Tierpark Zoo,file:$HOME/Pictures/rumunia/photobook,file:$HOME/Pictures/Kilimanjaro,file:$HOME/Pictures/Tanzania,file:$HOME/Pictures/classic_remise,file:$HOME/Pictures/swieta_2019,file:$HOME/Pictures/rumunia,file:$HOME/Pictures/Potsdam,file:$HOME/Pictures/rumunia,file:$HOME/Pictures/rumunia/2,file:$HOME/Pictures/rumunia/1,file:$HOME/Pictures/Berlin Zamosc,file:$HOME/Pictures/Projektowanie uniwersalne,file:$HOME/Pictures/Łagów,file:$HOME/Pictures/Festival of Lights,file:$HOME/Projects,file:$HOME/Pictures/phone,file:///run/media/paulfantom/EB2A-5FC6/DCIM/105_PANA,file:///run/media/paulfantom/7000-8000/DCIM/100GOPRO,file:$HOME/swiss,file:$HOME/100NCD60,file:$HOME/swiss,file:$HOME/100NCD60/garten der welt,file:$HOME/Media/uncut/2018/12,file:$HOME/old,file:$HOME/slub,file:$HOME/devops,file:$HOME/Pictures/2018-12-08_12 - Teneryfa/CanFly,file:$HOME/Pictures/2018-12-08_12 - Teneryfa/CanFly,file:$HOME/Pictures/2018-12-08_12 - Teneryfa/GoPro,file:$HOME/Pictures/2018-12-08_12 - Teneryfa/GoPro,file:$HOME/Pictures/2018-12-08_12 - Teneryfa/CanFly,file:$HOME/Pictures/2018-12-08_12 - Teneryfa,file:$HOME/Downloads/shallow/netdata,file:$HOME/Pictures/2018-08-26_09-05 - Czarnogora,file:$HOME/Pictures/2018-08-26_09-05 - Czarnogora/Xiaomi
+History Items[$e]=file:$HOME/Pictures,file:$HOME/Pictures,file:$HOME/Pictures,file:$HOME/Pics-test,file:$HOME/Pics-test,file:$HOME/Pictures,file:$HOME/Pictures,file:$HOME/Pictures,file:$HOME/Seafile,file:$HOME/Pictures/Dark and Cranes,file:$HOME/Pictures/Dark and Cranes,file:$HOME/Pictures/adus-bln,file:$HOME/Pictures/cedynia,file:$HOME/Pictures/airport,file:$HOME/Pictures/Kili_pics,file:$HOME/Pictures/Kilimanjaro/Maciek/Lumix,file:$HOME/Pictures/Kilimanjaro,file:$HOME/Pictures/Kompromitujace zdjecia Adrianny,file:$HOME/Pictures/Berlin - 2020-07,file:$HOME/Pictures/Zamosc - Zwierzyniec - Gorecko,file:$HOME/Pictures/cedynia,file:$HOME/Pictures/Werneuchen flugplatz,file:$HOME/Pictures/Schoenower Heide,file:$HOME/Pictures/Tierpark Zoo,file:$HOME/Pictures/rumunia/photobook,file:$HOME/Pictures/Kilimanjaro,file:$HOME/Pictures/Tanzania,file:$HOME/Pictures/classic_remise,file:$HOME/Pictures/swieta_2019,file:$HOME/Pictures/rumunia,file:$HOME/Pictures/Potsdam,file:$HOME/Pictures/rumunia,file:$HOME/Pictures/rumunia/2,file:$HOME/Pictures/rumunia/1,file:$HOME/Pictures/Berlin Zamosc,file:$HOME/Pictures/Projektowanie uniwersalne,file:$HOME/Pictures/Łagów,file:$HOME/Pictures/Festival of Lights,file:$HOME/Projects,file:$HOME/Pictures/phone,file:///run/media/paulfantom/EB2A-5FC6/DCIM/105_PANA,file:///run/media/paulfantom/7000-8000/DCIM/100GOPRO,file:$HOME/swiss,file:$HOME/100NCD60,file:$HOME/swiss,file:$HOME/100NCD60/garten der welt,file:$HOME/Media/uncut/2018/12,file:$HOME/old,file:$HOME/slub,file:$HOME/devops
 
 [General]
 BrowserApplication[$e]=google-chrome.desktop
 ColorScheme=BreezeDark
 Name=Breeze Dark
+XftHintStyle=hintslight
+XftSubPixel=rgb
 dbfile=/home/paulfantom/.mozilla/firefox/zs8bsmd6.default/places.sqlite
+fixed=DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0
 shadeSortColumn=true
 
 [Icons]
@@ -291,6 +294,7 @@ LANGUAGE=en_US
 [WM]
 activeBackground=49,54,59
 activeBlend=255,255,255
+activeFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 activeForeground=239,240,241
 inactiveBackground=49,54,59
 inactiveBlend=75,71,67

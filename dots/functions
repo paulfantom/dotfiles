@@ -1,23 +1,6 @@
 #!/bin/bash
 # shellcheck source=/dev/null
 
-function play() { qdbus "org.mpris.MediaPlayer2.$1" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play; }
-function pause() { qdbus "org.mpris.MediaPlayer2.$1" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause; }
-
-weather() {
-	curl "wttr.in/$1"
-}
-
-lights_off() {
-	if [ -z "$1" ]; then
-		sleep 5
-	else
-		sleep "$1"
-	fi
-	xset dpms force off
-	ambilight off
-}
-
 new-alias() {
 	local last_cmd
 	# shellcheck disable=SC2001
@@ -68,31 +51,6 @@ function gpgreload() {
 	gpg-connect-agent "scd serialno" "learn --force" /bye >/dev/null 2>&1
 }
 
-# TODO: kubectl plugin ?
-function k8s-show-image() {
-	kubectl get pods --all-namespaces -l app="${1}" -ojsonpath="{.items[*].spec.containers[?(@.name==\"$1\")].image}"
-}
-
-# TODO: kubectl plugin?
-function k8s-po-show-rules() {
-	kubectl -n prometheus-operator-e2e-tests exec -it prometheus-test-0 -c prometheus '/bin/sh -c "cat /etc/prometheus/rules/rules-0/test.rules"'
-}
-
-
-function up() {
-	local msg="System update finished."
-	#if [ "$(dnf check-update --refresh 2>/dev/null | grep -c "grub\|kernel")" -gt 0 ]; then
-	#	msg="$msg Reboot is required."
-	#	if find -- "/boot" -prune -type d -empty | grep -q .; then
-	#		echo "Cannot update system since /boot is empty."
-	#		exit 1
-	#	fi
-	#fi
-	sudo dnf update
-	flatpak update
-	notify-send "$msg"
-}
-
 todo() {
 	if [ "$(date +%H)" -gt 18 ] || [ "$(date +%u)" -gt 5 ]; then
 		# After work don't display TODO list
@@ -109,42 +67,6 @@ todo() {
 
 todoedit() {
 	vim "$HOME/Notes/TODO"
-}
-
-# TODO: Improve and move to prometheus-operator repo
-e2e() {
-	if [ "$(basename "$(pwd)")" != "prometheus-operator" ]; then
-		echo "Not in prometheus-operator directory"
-		return
-	fi
-	kind delete cluster
-	kind create cluster
-	export KUBECONFIG
-	KUBECONFIG="$(kind get kubeconfig-path)"
-	make image
-	for n in "operator" "config-reloader"; do
-		kind load docker-image "quay.io/coreos/prometheus-$n:$(git rev-parse --short HEAD)"
-	done
-	until [ "$(kubectl get pods -n kube-system --field-selector=status.phase==Running | wc -l )" -eq 9 ]; do
-		echo "Waiting for cluster to finish bootstraping"
-		sleep 5
-	done
-	make test-e2e
-}
-
-# OpenShift specific
-function clusterbot() {
-	local file
-	#shellcheck disable=SC2012,SC2086
-	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig.txt | head -n1)
-	if [ "$file" == "" ]; then
-		echo "clusterbot kubeconfig file not found"
-	else
-		mv "$file" "$HOME/.kube/config.clusterbot"
-		export KUBECONFIG="$HOME/.kube/config.clusterbot"
-		kubectl get clusterversion
-		export KUBECTL_NAMESPACE="openshift-monitoring"
-	fi
 }
 
 picsort() {
@@ -173,6 +95,7 @@ function monitor() {
 	sleep 5
 	eval "${COMMAND} ${PARAMS}"
 }
+complete -W "projector lg reset" monitor
 
 function sshcopyid() {
 	local host
@@ -217,18 +140,6 @@ function image-manifest() {
 	docker manifest push "${img}"
 }
 
-# TODO: Improve image building in prometheus-operator to make this obsolete
-function prom-op-mirroring {
-	local tag="${1}"
-	local branch="${2}"
-	for img in quay.io/prometheus-operator/prometheus-operator quay.io/coreos/prometheus-operator quay.io/prometheus-operator/prometheus-config-reloader quay.io/coreos/prometheus-config-reloader; do
-		for arch in amd64 arm64 arm; do
-			image-reupload "${img}-dev:${branch}-${arch}" "${img}:${tag}-${arch}"
-			image-manifest "${img}:${tag}"
-		done
-	done
-}
-
 # TODO: Check if still needed. Consider moving to kube-prometheus or tobs
 wrap() {
 local where="${1}"
@@ -248,45 +159,52 @@ $(sed 's/^/  /' < "${where}")
 EOF
 }
 
-# OpenShift specific
-# Simpler version of https://github.com/openshift/cluster-monitoring-operator/blob/master/hack/uwm_setup.sh
-uwm-start() {
-	local TMP, NAMESPACE
-	NAMESPACE=openshift-user-workload-monitoring
-	TMP=$(mktemp -d)
-	oc create configmap cluster-monitoring-config -n openshift-monitoring
-	oc get configmap cluster-monitoring-config -n openshift-monitoring -o yaml > "${TMP}/cluster-monitoring-config.yaml"
-	cat <<-EOF >> "${TMP}/cluster-monitoring-config.yaml"
-	data:
-	  config.yaml: |
-	    enableUserWorkload: true
-	EOF
-	oc apply -f "${TMP}/cluster-monitoring-config.yaml"
-	echo -n "Waiting for OpenShift user workload monitoring Pods."
-	while [[ "$(oc get pods -n ${NAMESPACE} --field-selector=status.phase!=Running 2>/dev/null | wc -l)" -gt 1 ]] || \
-	      [[ "$(oc get pods -n ${NAMESPACE} 2>/dev/null | grep -sc 'prometheus-user-workload')" -lt 1 ]] || \
-	      [[ "$(oc get pods -n ${NAMESPACE} 2>/dev/null | grep -sc 'thanos-ruler-user-workload')" -lt 1 ]]; do
-		echo -n "."
-		sleep 5
-	done
-	echo " done"
-}
-
-# OpenShift specific
-# Complementary to uwm-start()
-uwm-stop() {
-	local TMP
-	TMP=$(mktemp -d)
-	oc create configmap cluster-monitoring-config -n openshift-monitoring
-	oc get configmap cluster-monitoring-config -n openshift-monitoring -o yaml > "${TMP}/cluster-monitoring-config.yaml"
-	cat <<-EOF >> "${TMP}/cluster-monitoring-config.yaml"
-	data:
-	  config.yaml: |
-	    enableUserWorkload: false
-	EOF
-	oc apply -f "${TMP}/cluster-monitoring-config.yaml"
-}
-
 diffyaml() {
   yamldiff --file1 "${1}" --file2 "${2}"
+}
+
+# TODO: kubectl plugin ?
+function k8s-show-image() {
+	kubectl get pods --all-namespaces -l app="${1}" -ojsonpath="{.items[*].spec.containers[?(@.name==\"$1\")].image}"
+}
+
+# TODO: kubectl plugin?
+function k8s-po-show-rules() {
+	kubectl -n prometheus-operator-e2e-tests exec -it prometheus-test-0 -c prometheus '/bin/sh -c "cat /etc/prometheus/rules/rules-0/test.rules"'
+}
+
+# TODO: Improve and move to prometheus-operator repo
+e2e() {
+	if [ "$(basename "$(pwd)")" != "prometheus-operator" ]; then
+		echo "Not in prometheus-operator directory"
+		return
+	fi
+	kind delete cluster
+	kind create cluster
+	export KUBECONFIG
+	KUBECONFIG="$(kind get kubeconfig-path)"
+	make image
+	for n in "operator" "config-reloader"; do
+		kind load docker-image "quay.io/coreos/prometheus-$n:$(git rev-parse --short HEAD)"
+	done
+	until [ "$(kubectl get pods -n kube-system --field-selector=status.phase==Running | wc -l )" -eq 9 ]; do
+		echo "Waiting for cluster to finish bootstraping"
+		sleep 5
+	done
+	make test-e2e
+}
+
+# OpenShift specific
+function clusterbot() {
+	local file
+	#shellcheck disable=SC2012,SC2086
+	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig.txt | head -n1)
+	if [ "$file" == "" ]; then
+		echo "clusterbot kubeconfig file not found"
+	else
+		mv "$file" "$HOME/.kube/config.clusterbot"
+		export KUBECONFIG="$HOME/.kube/config.clusterbot"
+		kubectl get clusterversion
+		export KUBECTL_NAMESPACE="openshift-monitoring"
+	fi
 }

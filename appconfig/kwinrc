@@ -5,3 +5,9 @@ OpenGLIsUnsafe=false
 Id_1=84513175-7b22-4734-b10a-2bd09ce4e8d0
 Number=1
 Rows=1
+
+[Plugins]
+minimizeallEnabled=false
+sticky-window-snappingEnabled=true
+synchronizeskipswitcherEnabled=true
+videowallEnabled=false
