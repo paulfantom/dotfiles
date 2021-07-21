@@ -36,8 +36,8 @@ libreoffice
 libva-intel-driver
 libva-utils
 lm_sensors
-nextcloud-client
-nextcloud-client-dolphin
+# nextcloud-client
+# nextcloud-client-dolphin
 pavucontrol
 powerline
 powerline-fonts
@@ -45,7 +45,6 @@ powertop
 sg3_utils
 tlp
 vim-powerline
-vivaldi-snapshot
 vlc
 xbindkeys
 xmodmap

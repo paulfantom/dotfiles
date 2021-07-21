@@ -1,0 +1,9 @@
+[Unit]
+Description = Temporary Downloads Data Directory
+[Mount]
+What = tmpfs
+Where = /home/USER/Downloads
+Type = tmpfs
+Options = nodev,nosuid,size=3G
+[Install]
+WantedBy = multi-user.target

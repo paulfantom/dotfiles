@@ -1,0 +1,91 @@
+SHELL=/bin/bash
+
+PROM_VERSION=b0944590a1c9a6b35dc5a696869f75f422b107a1
+AM_VERSION=44f8adc06af5101ad64bd8b9c8b18273f2922051
+JSONNET_VERSION=51daeb3229e488ce4a57d16bcfd77b6de896d03c
+KIND_VERSION?=latest
+GIT_LFS_VERSION=2.5.2
+
+LOCALBIN=/usr/local/bin
+GOPATH=$(HOME)/Projects/go
+export GOROOT
+GOBIN=$(GOPATH)/bin
+
+
+.PHONY: all
+all: $(LOCALBIN)/speedtest \
+	$(LOCALBIN)/icdiff \
+	$(LOCALBIN)/git-icdiff \
+	$(LOCALBIN)/git-lfs \
+	tuptime \
+	$(LOCALBIN)/kind \
+	golang \
+	$(GOBIN)/promtool \
+	$(GOBIN)/amtool \
+	$(GOBIN)/jsonnet  ## Install tools
+
+$(LOCALBIN)/speedtest:
+	sudo wget -O $@ https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
+	sudo chmod +x $@
+    
+$(LOCALBIN)/icdiff:
+	sudo wget -O $@ https://raw.githubusercontent.com/jeffkaufman/icdiff/master/icdiff
+	sudo chmod +x $@
+
+$(LOCALBIN)/git-icdiff:
+	sudo wget -O $@ https://raw.githubusercontent.com/jeffkaufman/icdiff/master/git-icdiff
+	sudo chmod +x $@
+
+$(LOCALBIN)/git-lfs:
+	wget "https://github.com/git-lfs/git-lfs/releases/download/v$(GIT_LFS_VERSION)/git-lfs-linux-amd64-v$(GIT_LFS_VERSION).tar.gz" -O "/tmp/git-lfs-linux-amd64-v$(GIT_LFS_VERSION).tar.gz"
+	mkdir -p /tmp/git-lfs
+	tar -xvf "/tmp/git-lfs-linux-amd64-v${GIT_LFS_VERSION}.tar.gz" -C /tmp/git-lfs
+	sudo /tmp/git-lfs/install.sh
+
+.PHONY: tuptime
+tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime.service /etc/systemd/system/tuptime.timer
+/usr/bin/tuptime:
+	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/tuptime
+	chmod +x $@
+
+/etc/systemd/system/tuptime.service: /usr/bin/tuptime
+	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime.service
+
+/etc/systemd/system/tuptime.timer: /etc/systemd/system/tuptime.service
+	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime.timer
+	systemctl daemon-reload
+	systemctl enable tuptime.timer
+
+$(LOCALBIN)/kind:
+	curl -Lo /tmp/kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-linux-amd64
+	chmod +x /tmp/kind
+	sudo mv /tmp/kind $(LOCALBIN)/kind
+
+.PHONY: golang
+GOLANG_VERSION?=1.16.5
+golang: /usr/local/go$(GOLANG_VERSION) $(GOPATH)
+
+$(GOPATH):
+	mkdir -p "$(GOPATH)"
+
+/usr/local/go$(GOLANG_VERSION):
+	mkdir /tmp/golang$(GOLANG_VERSION)
+	wget "https://golang.org/dl/go$(GOLANG_VERSION).linux-amd64.tar.gz" -O "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
+	tar -C "/tmp/golang$(GOLANG_VERSION)" -xzf "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
+	sudo mv "/tmp/golang$(GOLANG_VERSION)/go" "/usr/local/go$(GOLANG_VERSION)"
+	sudo unlink "/usr/local/go"
+	sudo ln -snf "/usr/local/go$(GOLANG_VERSION)" "/usr/local/go"
+
+$(GOBIN)/promtool:
+	#go install github.com/prometheus/prometheus/cmd/promtool@$(PROM_VERSION)
+	echo "TODO"
+
+$(GOBIN)/amtool:
+	go install github.com/prometheus/alertmanager/cmd/amtool@$(AM_VERSION)
+
+$(GOBIN)/jsonnet:
+	go install github.com/google/go-jsonnet/cmd/jsonnet@$(JSONNET_VERSION)
+	go install github.com/google/go-jsonnet/cmd/jsonnetfmt@$(JSONNET_VERSION)
+	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@$(JSONNET_VERSION)
+
+
