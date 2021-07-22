@@ -51,12 +51,12 @@ account:  ## Configure user account groups and sudo access
 .PHONY: bin
 bin: $(BINSCRIPTS)  ## Install bin directory files.
 $(BINSCRIPTS):
-	sudo ln -sf bin/$(shell basename $@) $@
+	sudo ln -sf $(CURDIR)/bin/$(shell basename $@) $@
 
 .PHONY: dotfiles
 dotfiles: $(DOTFILES)  ## Install dotfiles.
 $(DOTFILES):
-	ln -sfn dots/$(shell basename $@ | cut -c2-) $@
+	ln -sfn $(CURDIR)/dots/$(shell basename $@ | cut -c2-) $@
 
 .PHONY: appconfig
 appconfig: $(APPCONFIG)  ## Install application configuration files
