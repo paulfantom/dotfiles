@@ -12,6 +12,7 @@ if command -v kubectl &>/dev/null; then
 	# shellcheck source=/dev/null
 	source <(kubectl completion "${CURSHELL}")
 	complete -F __start_kubectl k
+	complete -F __start_kubectl kubectl
 fi
 
 if command -v kind &>/dev/null; then
@@ -30,13 +31,9 @@ if ! command -v oc &>/dev/null; then
 fi
 alias k=kubectl
 
+alias konfig = 'kubectl konfig'
 alias kube-lint="kube-linter lint"
-
-alias kube-rim="export KUBECONFIG=${HOME}/.kube/rim-kubeconfig.yaml"
-alias kube-kind="export KUBECONFIG=${HOME}/.kube/kind-cluster-kind.yaml"
-alias kube-ankh="export KUBECONFIG=${HOME}/.kube/config.ankhmorpork.yaml"
-alias kube-clusterbot="export KUBECONFIG=${HOME}/.kube/config.clusterbot"
-alias kube-reset="export KUBECONFIG=${HOME}/.kube/config"
+alias kube-import="kubectl konfig import"
 
 # -- FUNCTIONS --
 

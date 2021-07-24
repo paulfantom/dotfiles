@@ -5,6 +5,7 @@ AM_VERSION=44f8adc06af5101ad64bd8b9c8b18273f2922051
 JSONNET_VERSION=51daeb3229e488ce4a57d16bcfd77b6de896d03c
 KIND_VERSION?=latest
 GIT_LFS_VERSION=2.5.2
+KREW_PLUGINS=$(shell cat $(CURDIR)/packages/kubernetes-krew-plugins)
 
 LOCALBIN=/usr/local/bin
 GOPATH=$(HOME)/Projects/go
@@ -18,6 +19,7 @@ all: $(LOCALBIN)/speedtest \
 	$(LOCALBIN)/git-icdiff \
 	$(LOCALBIN)/git-lfs \
 	tuptime \
+	$(LOCALBIN)/kubectl \
 	$(LOCALBIN)/kind \
 	golang \
 	$(GOBIN)/promtool \
@@ -56,10 +58,25 @@ tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime.service /etc/systemd/syste
 	systemctl daemon-reload
 	systemctl enable tuptime.timer
 
+$(LOCALBIN)/kubectl:
+	curl -LO "https://dl.k8s.io/release/$$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+	sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+	rm kubectl
+
 $(LOCALBIN)/kind:
 	curl -Lo /tmp/kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-linux-amd64
 	chmod +x /tmp/kind
 	sudo mv /tmp/kind $(LOCALBIN)/kind
+
+$(HOME)/.krew/bin/kubectl-krew: $(LOCALBIN)/kubectl
+	cd "$$(mktemp -d)" && \
+	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" && \
+	tar zxvf krew.tar.gz && \
+	./krew-linux_amd64 install krew
+
+.PHONY: kubectl-plugins
+kubectl-plugins: $(HOME)/.krew/bin/kubectl-krew $(LOCALBIN)/kubectl
+	kubectl krew install $(KREW_PLUGINS)
 
 .PHONY: golang
 GOLANG_VERSION?=1.16.5
