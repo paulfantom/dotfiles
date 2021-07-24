@@ -70,6 +70,21 @@ picsort() {
   #done
 }
 
+# Load secret variables and check their staleness
+function secrets-load() {
+	local secrets_file="$HOME/.secrets/shell_vars"
+	local staleness_period=3888000  # 45 days
+	if [ -f "$secrets_file" ]; then
+		last_mod=$(date +%s -r "$secrets_file")
+		if [ "$((last_mod + staleness_period))" -gt "$(date +%s)" ]; then
+			# shellcheck source=/dev/null
+			source "$secrets_file"
+		else
+			echo -e "\e[1m\e[5m\e[31mALERT! \e[25mCredentials are older than 45 days and were not loaded.\e[0m"
+		fi
+	fi
+}
+
 function monitor() {
 	local COMMAND="xrandr --output eDP1 --mode 1920x1080 "
 	case "$1" in

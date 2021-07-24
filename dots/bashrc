@@ -61,14 +61,3 @@ if [ -f "$(command -v powerline-daemon)" ]; then
     # shellcheck source=/dev/null
     source "/usr/share/powerline/bash/powerline.sh"
 fi
-
-# check if there is newer kernel installed
-checkkernel
-
-# ensure proper xmodmap mapping
-(xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"
-
-# Show what I need to do next
-todo
-
-
