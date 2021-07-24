@@ -21,6 +21,7 @@ unzip
 vim
 wget
 zip
+zsh
 
 bridge-utils
 colordiff
