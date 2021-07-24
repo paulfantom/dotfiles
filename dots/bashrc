@@ -56,12 +56,6 @@ fi
 # check if there is newer kernel installed
 checkkernel
 
-# add doctl bash autocompletion
-if command -v doctl &>/dev/null; then
-	# shellcheck source=/dev/null
-	source <(doctl completion bash)
-fi
-
 # ensure proper xmodmap mapping
 (xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"
 

@@ -1,19 +1,22 @@
 #!/bin/bash
-
 # -- EXPORTS --
 export KUBECONFIG="${HOME}/.kube/config"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # -- AUTOCOMPLETIONS --
+CURSHELL=bash
+if [ -n "${ZSH}" ]; then
+	CURSHELL="zsh"
+fi
 if command -v kubectl &>/dev/null; then
 	# shellcheck source=/dev/null
-	source <(kubectl completion bash)
+	source <(kubectl completion "${CURSHELL}")
 	complete -F __start_kubectl k
 fi
 
 if command -v kind &>/dev/null; then
 	# shellcheck source=/dev/null
-	source <(kind completion bash)
+	source <(kind completion "${CURSHELL}")
 fi
 
 if command -v kubecolor &>/dev/null; then

@@ -23,6 +23,17 @@ push:
 	git commit -m '[update] synchronize with upstream $(shell date)'
 	git push
 
+.PHONY: zsh
+zsh: $(HOME)/.oh-my-zsh dotfiles
+
+.PHONY: zsh-upgrade
+zsh-upgrade: $(HOME)/.oh-my-zsh
+	$(HOME)/.oh-my-zsh/tools/upgrade.sh
+
+$(HOME)/.oh-my-zsh:
+	RUNZSH=no KEEP_ZSHRC=yes sh -c "$$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+
 .PHONY: gpg
 gpg:
 	gpg --list-keys || true;
