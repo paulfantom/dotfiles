@@ -24,9 +24,18 @@ push:
 	git push
 
 .PHONY: zsh
-zsh: $(HOME)/.oh-my-zsh dotfiles
+zsh: $(HOME)/.oh-my-zsh $(HOME)/.oh-my-zsh/completions dotfiles  ## Install zsh configuration 
 $(HOME)/.oh-my-zsh:
 	RUNZSH=no KEEP_ZSHRC=yes sh -c "$$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+.PHONY: zsh-completions
+zsh-completions: $(HOME)/.oh-my-zsh/completions  ## Install or update zsh completion scripts
+	wget -O $(HOME)/.oh-my-zsh/completions/_kubectx.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh
+	wget -O $(HOME)/.oh-my-zsh/completions/_kubens.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh
+
+
+$(HOME)/.oh-my-zsh/completions: $(HOME)/.oh-my-zsh
+	mkdir -p $(HOME)/.oh-my-zsh/completions
 
 .PHONY: gpg
 gpg:

@@ -77,6 +77,8 @@ $(HOME)/.krew/bin/kubectl-krew: $(LOCALBIN)/kubectl
 .PHONY: kubectl-plugins
 kubectl-plugins: $(HOME)/.krew/bin/kubectl-krew $(LOCALBIN)/kubectl
 	kubectl krew install $(KREW_PLUGINS)
+	sudo ln -s $(HOME)/.krew/bin/kubectl-ns /usr/local/bin/kubens
+	sudo ln -s $(HOME)/.krew/bin/kubectl-ctx /usr/local/bin/kubectx
 
 .PHONY: golang
 GOLANG_VERSION?=1.16.5

@@ -31,7 +31,7 @@ if ! command -v oc &>/dev/null; then
 fi
 alias k=kubectl
 
-alias konfig = 'kubectl konfig'
+alias konfig="kubectl konfig"
 alias kube-lint="kube-linter lint"
 alias kube-import="kubectl konfig import"
 

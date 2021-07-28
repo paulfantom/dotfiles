@@ -3,3 +3,5 @@ ingress-nginx
 konfig
 krew
 promdump
+ctx
+ns
