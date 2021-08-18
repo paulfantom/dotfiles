@@ -5,6 +5,7 @@ AM_VERSION=44f8adc06af5101ad64bd8b9c8b18273f2922051
 JSONNET_VERSION=51daeb3229e488ce4a57d16bcfd77b6de896d03c
 KIND_VERSION?=latest
 GIT_LFS_VERSION=2.5.2
+GOLANG_VERSION?=1.17
 KREW_PLUGINS=$(shell cat $(CURDIR)/packages/kubernetes-krew-plugins)
 
 LOCALBIN=/usr/local/bin
@@ -81,7 +82,6 @@ kubectl-plugins: $(HOME)/.krew/bin/kubectl-krew $(LOCALBIN)/kubectl
 	sudo ln -s $(HOME)/.krew/bin/kubectl-ctx /usr/local/bin/kubectx
 
 .PHONY: golang
-GOLANG_VERSION?=1.16.5
 golang: /usr/local/go$(GOLANG_VERSION) $(GOPATH)
 
 $(GOPATH):
