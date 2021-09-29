@@ -29,8 +29,9 @@ exfat-utils
 fedora-workstation-repositories
 fuse-exfat
 google-chrome-stable
+guake
 jq
-kate
+# kate
 latte-dock
 libappindicator
 libreoffice
@@ -49,5 +50,5 @@ vim-powerline
 vlc
 xbindkeys
 xmodmap
-yakuake
+# yakuake
 
