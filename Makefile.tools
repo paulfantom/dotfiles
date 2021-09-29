@@ -9,7 +9,7 @@ GOLANG_VERSION?=1.17
 KREW_PLUGINS=$(shell cat $(CURDIR)/packages/kubernetes-krew-plugins)
 
 LOCALBIN=/usr/local/bin
-GOPATH=$(HOME)/Projects/go
+GOPATH=$(HOME)/Projects
 export GOROOT
 GOBIN=$(GOPATH)/bin
 
