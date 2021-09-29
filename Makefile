@@ -80,7 +80,7 @@ $(APPCONFIG):
 .PHONY: etc
 etc: $(ETCFILES) /etc/systemd/system/home-$(USER)-Downloads.mount  ## Install etc directory files.
 $(ETCFILES):
-	sudo ln -f "$(CURDIR)$@" "$@"
+	sudo ln -sf "$(CURDIR)$@" "$@"
 	sudo chown root:root "$@"
 	sudo restorecon -FvR "$@"
 	-systemctl --user daemon-reload
