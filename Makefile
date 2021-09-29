@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 DOTFILES=$(shell find "$(CURDIR)/dots" -name "*" -type f -printf "$(HOME)/.%P\n")
 BINSCRIPTS=$(shell find $(CURDIR)/bin -type f -printf "/usr/local/bin/%P\n")
-APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*" -type f | sed -e 's|$(CURDIR)\/app|$(HOME)/.|')
+APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*" -type f | sed -e "s|$(CURDIR)\/app|$(HOME)/.|")
 ETCFILES=$(shell find $(CURDIR)/etc -type f | sed -e 's|$(CURDIR)||')
 
 .PHONY: all
