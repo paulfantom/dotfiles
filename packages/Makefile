@@ -1,5 +1,16 @@
+FLATPAKS=$(shell cat "flatpaks.txt")
+
 .PHONY: all
-all: install-packages remove-bloat configure-packages
+all: install-packages flatpaks remove-bloat configure-packages
+
+.PHONY: flatpak-remotes
+flatpak-remotes:
+	-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+.PHONY: flatpaks
+flatpaks: $(FLATPAKS) flatpak-remotes
+$(FLATPAKS):
+	flatpak install flathub --or-update --assumeyes $@
 
 .PHONY: remove-bloat
 remove-bloat:
