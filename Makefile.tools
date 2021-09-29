@@ -46,18 +46,18 @@ $(LOCALBIN)/git-lfs:
 	sudo /tmp/git-lfs/install.sh
 
 .PHONY: tuptime
-tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime.service /etc/systemd/system/tuptime.timer
+tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime-cron.service /etc/systemd/system/tuptime-cron.timer
 /usr/bin/tuptime:
 	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/tuptime
 	chmod +x $@
 
-/etc/systemd/system/tuptime.service: /usr/bin/tuptime
-	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime.service
+/etc/systemd/system/tuptime-cron.service: /usr/bin/tuptime
+	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime-cron.service
 
-/etc/systemd/system/tuptime.timer: /etc/systemd/system/tuptime.service
-	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime.timer
+/etc/systemd/system/tuptime-cron.timer: /etc/systemd/system/tuptime-cron.service
+	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime-cron.timer
 	systemctl daemon-reload
-	systemctl enable tuptime.timer
+	systemctl enable tuptime-cron.timer
 
 $(LOCALBIN)/kubectl:
 	curl -LO "https://dl.k8s.io/release/$$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
