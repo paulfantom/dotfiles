@@ -6,7 +6,7 @@ APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*" -type f | sed -e "s|$(CURDI
 ETCFILES=$(shell find $(CURDIR)/etc -type f | sed -e 's|$(CURDIR)||')
 
 .PHONY: all
-all: bin install dotfiles gpg appconfig vim etc tools ## Installs the bin and etc directory files and the dotfiles.
+all: bin install dotfiles zsh gpg appconfig vim etc tools ## Installs the bin and etc directory files and the dotfiles.
 
 .PHONY: install
 install:  ## Install system packages and configure repositories
