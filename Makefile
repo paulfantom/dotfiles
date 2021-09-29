@@ -42,7 +42,7 @@ gpg:
 	gpg --list-keys || true;
 	ln -sfn $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf;
 	ln -sfn $(CURDIR)/gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf;
-	git update-index --skip-worktree $(CURDIR)/.gitconfig;
+	-git update-index --skip-worktree $(CURDIR)/.gitconfig;
 
 .PHONY: vim
 vim: ## Install and configure VIM
