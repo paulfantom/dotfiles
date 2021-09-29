@@ -56,8 +56,8 @@ tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime-cron.service /etc/systemd/
 
 /etc/systemd/system/tuptime-cron.timer: /etc/systemd/system/tuptime-cron.service
 	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime-cron.timer
-	systemctl daemon-reload
-	systemctl enable tuptime-cron.timer
+	sudo systemctl daemon-reload
+	sudo systemctl enable tuptime-cron.timer
 
 $(LOCALBIN)/kubectl:
 	curl -LO "https://dl.k8s.io/release/$$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -92,7 +92,7 @@ $(GOPATH):
 	wget "https://golang.org/dl/go$(GOLANG_VERSION).linux-amd64.tar.gz" -O "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
 	tar -C "/tmp/golang$(GOLANG_VERSION)" -xzf "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
 	sudo mv "/tmp/golang$(GOLANG_VERSION)/go" "/usr/local/go$(GOLANG_VERSION)"
-	sudo unlink "/usr/local/go"
+	-sudo unlink "/usr/local/go"
 	sudo ln -snf "/usr/local/go$(GOLANG_VERSION)" "/usr/local/go"
 
 $(GOBIN)/promtool:
