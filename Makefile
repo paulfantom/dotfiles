@@ -75,7 +75,7 @@ $(DOTFILES):
 .PHONY: appconfig
 appconfig: $(APPCONFIG)  ## Install application configuration files
 $(APPCONFIG):
-	ln -sfn $(shell echo $@ | sed -e "s|$(HOME)/.|$(CURDIR)/app|")
+	ln -sfn $(shell echo $@ | sed -e "s|$(HOME)/.|$(CURDIR)/app|") $@
 
 .PHONY: etc
 etc: $(ETCFILES) /etc/systemd/system/home-$(USER)-Downloads.mount  ## Install etc directory files.
