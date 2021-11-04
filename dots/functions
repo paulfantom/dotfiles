@@ -58,16 +58,45 @@ todoedit() {
 	vim "$HOME/Notes/TODO"
 }
 
-picsort() {
-  # exiftool -ext jpg '-FileName<CreateDate' -d %Y_%m_%d__%H_%M_%S%%-c.%%e .
-  exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpg "-filename<datetimeoriginal" .
-  exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpeg "-filename<datetimeoriginal" .
-  #X=1
-  #for i in *; do
-  #  # mv "$i" "$(printf %04d.%s ${X%.*} "${i##*.}")"
-  #  mv "$i" "$(printf %04d%s ${X%.*} "_${i}")"
-  #  X="$((X+1))"
-  #done
+pic-date-prefix() {
+	# exiftool -ext jpg '-FileName<CreateDate' -d %Y_%m_%d__%H_%M_%S%%-c.%%e .
+	exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpg "-filename<datetimeoriginal" .
+	exiftool -d %Y-%m-%d-%H%M_%%f.%%e -ext jpeg "-filename<datetimeoriginal" .
+	#X=1
+	#for i in *; do
+	#  # mv "$i" "$(printf %04d.%s ${X%.*} "${i##*.}")"
+	#  mv "$i" "$(printf %04d%s ${X%.*} "_${i}")"
+	#  X="$((X+1))"
+	#done
+}
+
+pic-raw-delete() {
+	local rawdir="${1%/}"
+	local picdir="${2%/}"
+	local removallist=""
+
+	if [ "${rawdir}" = "" ]; then
+		echo "rawdir not passed. exiting"
+		return 128
+	fi
+	if [ "${picdir}" = "" ]; then
+		echo "picdir not passed. exiting"
+		return 128
+	fi
+	for file in ${rawdir}/*; do
+		fbname=$(basename "$file" | cut -d. -f1)
+		jpgfile=$(find "${picdir}" -maxdepth 1 -name "*${fbname}*")
+		if [ "${jpgfile}" = "" ]; then
+			echo "JPG file not found. Adding $file to removal list";
+			removallist="${file} ${removallist}"
+		fi
+	done
+	echo "Processing finished. Do you want to remove RAW files which do not have JPEG alternatives? [y/n]"
+	read confirm
+	if [[ "$confirm" =~ ^[Yy]$ ]]; then
+		rm $(echo $removallist)
+	fi
+	echo "All done"
 }
 
 # Load secret variables and check their staleness
@@ -184,17 +213,49 @@ e2e() {
 	make test-e2e
 }
 
-# OpenShift specific
-function clusterbot() {
-	local file
-	#shellcheck disable=SC2012,SC2086
-	file=$(ls -t ${HOME}/Downloads/cluster-bot-*.kubeconfig.txt | head -n1)
-	if [ "$file" == "" ]; then
-		echo "clusterbot kubeconfig file not found"
-	else
-		mv "$file" "$HOME/.kube/config.clusterbot"
-		export KUBECONFIG="$HOME/.kube/config.clusterbot"
-		kubectl get clusterversion
-		export KUBECTL_NAMESPACE="openshift-monitoring"
-	fi
+function scw-start() {
+	local name="$1"
+	ID=$(scw k8s cluster create name="${name}" --output json | jq -r '.id')
+	echo "Created cluster with ID: ${ID}"
+	echo -n 'Waiting for cluster start...'
+	while [ "$(scw k8s cluster get "${ID}" -o json | jq -r '.status')" != "pool_required" ]; do
+		echo -n '.'
+		sleep 1
+	done
+	echo " DONE"
+
+	scw k8s pool create cluster-id="${ID}" name="basic" node-type="GP1_XS" size=3 &>/dev/null
+	echo -n 'Waiting for node pool...'
+	while [ "$(scw k8s cluster get "${ID}" -o json | jq -r '.status')" != "ready" ]; do
+		echo -n '.'
+		sleep 1
+	done
+	echo " DONE"
+
+	scw k8s cluster get "${ID}"
+
+	scw k8s kubeconfig install "${ID}"
+
+	kubectl get pods -A
+}
+
+function scw-stop-all() {
+	for id in $(scw k8s cluster list -o json | jq -r '.[].id'); do
+		scw k8s kubeconfig uninstall "${id}"
+		scw k8s cluster delete "${id}" with-additional-resources=true
+	done
+}
+
+function drain-reboot() {
+	local host="$1"
+	kubectl drain "${host}" --ignore-daemonsets --delete-emptydir-data
+	ssh "${host}" sudo reboot
+	sleep 60
+	echo -n "Waiting for node ${host} to come back."
+	while ping -c 1 "${host}" &>/dev/null; do
+		echo -n '.'
+		sleep 1
+	done
+	echo "DONE"
+	kubectl uncordon "${host}"
 }
