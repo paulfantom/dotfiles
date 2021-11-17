@@ -8,7 +8,7 @@ flatpak-remotes:
 	-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 .PHONY: flatpaks
-flatpaks: $(FLATPAKS) flatpak-remotes
+flatpaks: flatpak-remotes $(FLATPAKS)
 $(FLATPAKS):
 	flatpak install flathub --or-update --assumeyes $@
 
