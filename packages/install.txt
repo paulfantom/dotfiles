@@ -28,6 +28,7 @@ colordiff
 exfat-utils
 fedora-workstation-repositories
 fuse-exfat
+fzf
 google-chrome-stable
 guake
 jq
@@ -48,6 +49,8 @@ sg3_utils
 tlp
 vim-powerline
 vlc
+v4l2ucp
+v4l-utils
 xbindkeys
 xmodmap
 # yakuake
