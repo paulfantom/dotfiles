@@ -15,14 +15,14 @@ GOBIN=$(GOPATH)/bin
 
 
 .PHONY: all
-all: $(LOCALBIN)/speedtest \
+all: golang \
+	$(LOCALBIN)/speedtest \
 	$(LOCALBIN)/icdiff \
 	$(LOCALBIN)/git-icdiff \
 	$(LOCALBIN)/git-lfs \
 	tuptime \
 	$(LOCALBIN)/kubectl \
 	$(LOCALBIN)/kind \
-	golang \
 	$(GOBIN)/promtool \
 	$(GOBIN)/amtool \
 	$(GOBIN)/jsonnet  ## Install tools
