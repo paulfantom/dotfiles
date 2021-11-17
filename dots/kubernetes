@@ -11,8 +11,10 @@ fi
 if command -v kubectl &>/dev/null; then
 	# shellcheck source=/dev/null
 	source <(kubectl completion "${CURSHELL}")
-	complete -F __start_kubectl k
-	complete -F __start_kubectl kubectl
+	if [ "${CURSHELL}" = "bash" ]; then
+		complete -F __start_kubectl k
+		complete -F __start_kubectl kubectl
+	fi
 fi
 
 if command -v kind &>/dev/null; then
@@ -20,10 +22,10 @@ if command -v kind &>/dev/null; then
 	source <(kind completion "${CURSHELL}")
 fi
 
-if command -v kubecolor &>/dev/null; then
-  alias kubectl="kubecolor"
-  complete -o default -F __start_kubectl kubecolor
-fi
+#if command -v kubecolor &>/dev/null; then
+#  alias kubectl="kubecolor"
+#  complete -o default -F __start_kubectl kubecolor
+#fi
 
 # -- ALIASES --
 if ! command -v oc &>/dev/null; then

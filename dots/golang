@@ -1,9 +1,9 @@
 export GO111MODULE=on
 export GOROOT=/usr/local/go
-export PATH=${PATH}:/usr/local/go/bin
+export PATH=${PATH}:/usr/local/go/bin:${HOME}/.local/bin
 
 # go path
-export GOPATH="${HOME}/Projects/go"
+export GOPATH="${HOME}/Projects"
 
 # update path
 export PATH=/usr/local/bin:/usr/local/go/bin:${PATH}:${GOPATH}/bin:/sbin
@@ -16,5 +16,5 @@ alias go13="/usr/local/go-1.13/bin/go"
 alias go14="/usr/local/go-1.14/bin/go"
 alias go15="/usr/local/go-1.15/bin/go"
 alias go16="/usr/local/go-1.16/bin/go"
-
+alias go17="/usr/local/go-1.17/bin/go"
 

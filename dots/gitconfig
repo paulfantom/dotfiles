@@ -154,7 +154,7 @@
         path = .gitconfig-work
 
 [commit]
-        gpgsign = true
+        gpgsign = false
 [gpg]
         program = gpg2
 [filter "lfs"]
