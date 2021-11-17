@@ -30,8 +30,8 @@ $(HOME)/.oh-my-zsh:
 
 .PHONY: zsh-completions
 zsh-completions: $(HOME)/.oh-my-zsh/completions  ## Install or update zsh completion scripts
-	wget -O $(HOME)/.oh-my-zsh/completions/_kubectx.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubectx.zsh
-	wget -O $(HOME)/.oh-my-zsh/completions/_kubens.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/kubens.zsh
+	wget -O $(HOME)/.oh-my-zsh/completions/_kubectx.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubectx.zsh
+	wget -O $(HOME)/.oh-my-zsh/completions/_kubens.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubens.zsh
 
 
 $(HOME)/.oh-my-zsh/completions: $(HOME)/.oh-my-zsh
