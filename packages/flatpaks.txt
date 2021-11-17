@@ -1,5 +1,5 @@
-slack
-spotify
+com.slack.Slack
+com.spotify.Client
 im.riot.Riot
-zoom
-signal
+us.zoom.Zoom
+org.signal.Signal
