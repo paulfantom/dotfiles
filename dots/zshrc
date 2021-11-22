@@ -81,6 +81,7 @@ plugins=(
   fzf
   git
   github
+  gpg-agent
   systemadmin
   zsh-interactive-cd
 )
@@ -91,8 +92,7 @@ setopt inc_append_history autocd nomatch notify share_history extended_history
 
 # Load the shell dotfiles, and then some:
 # * ~/.extra can be used for other settings you don’t want to commit.
-#for file in ~/.{aliases,functions,extra,exports,gpg-ssh,kubernetes,golang}; do
-for file in ~/.{aliases,functions,extra,exports,kubernetes,golang}; do
+for file in ~/.{aliases,functions,extra,exports,gpg-ssh,kubernetes,golang}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
 		# shellcheck source=/dev/null
 		source "$file"

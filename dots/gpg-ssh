@@ -1,29 +1,5 @@
 #!/bin/bash
 
-# Everything related to gpg and ssh
-
-export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-# if it's an ssh session export GPG_TTY
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-	GPG_TTY=$(tty)
-	export GPG_TTY
-fi
-
-# use a tty for gpg
-# solves error: "gpg: signing failed: Inappropriate ioctl for device"
-GPG_TTY=$(tty)
-export GPG_TTY
-# Start the gpg-agent if not already running
-if ! pgrep -x -u "${USER}" gpg-agent >/dev/null 2>&1; then
-    gpg-connect-agent /bye >/dev/null 2>&1
-    gpg-connect-agent updatestartuptty /bye >/dev/null
-fi
-# Set SSH to use gpg-agent
-unset SSH_AGENT_PID
-
-# add alias for ssh to update the tty
-alias ssh="gpg-connect-agent updatestartuptty /bye >/dev/null; ssh"
-
 # Add tab completion for SSH hostnames based on ~/.ssh/config
 # ignoring wildcards
 [[ -e "$HOME/.ssh/config" ]] && complete -o "default" \

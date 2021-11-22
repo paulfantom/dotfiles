@@ -38,14 +38,14 @@ $(HOME)/.oh-my-zsh/completions: $(HOME)/.oh-my-zsh
 	mkdir -p $(HOME)/.oh-my-zsh/completions
 
 .PHONY: gpg
-gpg:
+gpg:  ## Reconfiugure gpg agent
 	gpg --list-keys || true;
 	ln -sfn $(CURDIR)/gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf;
 	ln -sfn $(CURDIR)/gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf;
-	-git update-index --skip-worktree $(CURDIR)/.gitconfig;
+	-git update-index --skip-worktree $(CURDIR)/dots/gitconfig;
 
 .PHONY: vim
-vim: ## Install and configure VIM
+vim:  ## Install and configure VIM
 	ln -snf $(CURDIR)/vim $(HOME)/.vim;
 	ln -snf $(CURDIR)/vim/vimrc $(HOME)/.vimrc;
 	sudo ln -snf $(CURDIR)/vim /root/.vim;
