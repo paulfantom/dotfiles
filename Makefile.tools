@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-PROM_VERSION=b0944590a1c9a6b35dc5a696869f75f422b107a1
+PROM_VERSION=2.31.1
 AM_VERSION=44f8adc06af5101ad64bd8b9c8b18273f2922051
 JSONNET_VERSION=51daeb3229e488ce4a57d16bcfd77b6de896d03c
 KIND_VERSION?=latest
@@ -13,7 +13,6 @@ GOPATH=$(HOME)/Projects
 export GOROOT
 GOBIN=$(GOPATH)/bin
 
-
 .PHONY: all
 all: golang \
 	$(LOCALBIN)/speedtest \
@@ -23,6 +22,7 @@ all: golang \
 	tuptime \
 	$(LOCALBIN)/kubectl \
 	$(LOCALBIN)/kind \
+	kubectl-plugins \
 	$(GOBIN)/promtool \
 	$(GOBIN)/amtool \
 	$(GOBIN)/jsonnet  ## Install tools
@@ -49,7 +49,7 @@ $(LOCALBIN)/git-lfs:
 tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime-cron.service /etc/systemd/system/tuptime-cron.timer
 /usr/bin/tuptime:
 	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/tuptime
-	chmod +x $@
+	sudo chmod +x $@
 
 /etc/systemd/system/tuptime-cron.service: /usr/bin/tuptime
 	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/systemd/tuptime-cron.service
@@ -67,17 +67,18 @@ $(LOCALBIN)/kubectl:
 $(LOCALBIN)/kind:
 	curl -Lo /tmp/kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-linux-amd64
 	chmod +x /tmp/kind
-	sudo mv /tmp/kind $(LOCALBIN)/kind
+	sudo mv -u /tmp/kind $(LOCALBIN)/kind
 
 $(HOME)/.krew/bin/kubectl-krew: $(LOCALBIN)/kubectl
-	cd "$$(mktemp -d)" && \
-	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" && \
-	tar zxvf krew.tar.gz && \
-	./krew-linux_amd64 install krew
+	rm -rf "/tmp/krew"
+	mkdir -p "/tmp/krew"
+	wget https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-linux_amd64.tar.gz -O "/tmp/krew/krew.tar.gz"
+	tar -C "/tmp/krew" -xzf /tmp/krew/krew.tar.gz
+	/tmp/krew/krew-linux_amd64 install krew
 
 .PHONY: kubectl-plugins
 kubectl-plugins: $(HOME)/.krew/bin/kubectl-krew $(LOCALBIN)/kubectl
-	kubectl krew install $(KREW_PLUGINS)
+	$(LOCALBIN)/kubectl krew install $(KREW_PLUGINS)
 	sudo ln -s $(HOME)/.krew/bin/kubectl-ns /usr/local/bin/kubens
 	sudo ln -s $(HOME)/.krew/bin/kubectl-ctx /usr/local/bin/kubectx
 
@@ -88,23 +89,28 @@ $(GOPATH):
 	mkdir -p "$(GOPATH)"
 
 /usr/local/go$(GOLANG_VERSION):
+	rm -rf /tmp/golang$(GOLANG_VERSION)
 	mkdir /tmp/golang$(GOLANG_VERSION)
 	wget "https://golang.org/dl/go$(GOLANG_VERSION).linux-amd64.tar.gz" -O "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
 	tar -C "/tmp/golang$(GOLANG_VERSION)" -xzf "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION).linux-amd64.tar.gz"
-	sudo mv "/tmp/golang$(GOLANG_VERSION)/go" "/usr/local/go$(GOLANG_VERSION)"
+	mv "/tmp/golang$(GOLANG_VERSION)/go" "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION)"
+	sudo mv -n "/tmp/golang$(GOLANG_VERSION)/go$(GOLANG_VERSION)" "/usr/local/"
 	-sudo unlink "/usr/local/go"
 	sudo ln -snf "/usr/local/go$(GOLANG_VERSION)" "/usr/local/go"
 
 $(GOBIN)/promtool:
-	#go install github.com/prometheus/prometheus/cmd/promtool@$(PROM_VERSION)
-	echo "TODO"
+	# go install github.com/prometheus/prometheus/cmd/promtool@$(PROM_VERSION)
+	rm -rf /tmp/prometheus
+	mkdir -p /tmp/prometheus
+	wget https://github.com/prometheus/prometheus/releases/download/v$(PROM_VERSION)/prometheus-$(PROM_VERSION).linux-amd64.tar.gz -O "/tmp/prometheus/prometheus-$(PROM_VERSION).linux-amd64.tar.gz"
+	tar -C "/tmp/prometheus" -xzf "/tmp/prometheus/prometheus-$(PROM_VERSION).linux-amd64.tar.gz"
+	mv -u "/tmp/prometheus/prometheus-$(PROM_VERSION).linux-amd64/promtool" "$(GOBIN)/promtool"
+	chmod +x "$(GOBIN)/promtool"
 
-$(GOBIN)/amtool:
+$(GOBIN)/amtool: golang
 	go install github.com/prometheus/alertmanager/cmd/amtool@$(AM_VERSION)
 
-$(GOBIN)/jsonnet:
+$(GOBIN)/jsonnet: golang
 	go install github.com/google/go-jsonnet/cmd/jsonnet@$(JSONNET_VERSION)
 	go install github.com/google/go-jsonnet/cmd/jsonnetfmt@$(JSONNET_VERSION)
 	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@$(JSONNET_VERSION)
-
-
