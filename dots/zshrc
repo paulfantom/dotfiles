@@ -81,7 +81,7 @@ plugins=(
   fzf
   git
   github
-  gpg-agent
+  ssh-agent
   systemadmin
   zsh-interactive-cd
 )
@@ -101,6 +101,7 @@ done
 unset file
 
 zstyle ':completion:*:*:make:*' tag-order 'targets'
+zstyle ':completion:*:ssh:*' hosts on
 
 # Load secret variables when not stale
 secrets-load
