@@ -127,4 +127,4 @@ $(GOBIN)/jb: golang
 	go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
 
 $(GOBIN)/yamlfmt: golang
-	go install -a github.com/miekg/yamlfmt@latest
+	go install -a github.com/devopyio/yamlfmt@latest
