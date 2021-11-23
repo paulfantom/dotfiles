@@ -116,3 +116,6 @@ checkkernel
 #todo
 
 
+
+# Scaleway CLI autocomplete initialization.
+eval "$(/usr/local/bin/scw autocomplete script shell=zsh)"

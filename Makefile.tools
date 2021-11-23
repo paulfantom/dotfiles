@@ -23,9 +23,11 @@ all: golang \
 	$(LOCALBIN)/kubectl \
 	$(LOCALBIN)/kind \
 	kubectl-plugins \
+	$(LOCALBIN)/scw \
 	$(GOBIN)/promtool \
 	$(GOBIN)/amtool \
-	$(GOBIN)/jsonnet  ## Install tools
+	$(GOBIN)/jsonnet \
+	$(GOBIN)/jb  ## Install tools
 
 $(LOCALBIN)/speedtest:
 	sudo wget -O $@ https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
@@ -82,6 +84,11 @@ kubectl-plugins: $(HOME)/.krew/bin/kubectl-krew $(LOCALBIN)/kubectl
 	sudo ln -s $(HOME)/.krew/bin/kubectl-ns /usr/local/bin/kubens
 	sudo ln -s $(HOME)/.krew/bin/kubectl-ctx /usr/local/bin/kubectx
 
+$(LOCALBIN)/scw:
+	sudo curl -o $(LOCALBIN)/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.4.0/scw-2.4.0-linux-x86_64"
+	sudo chmod +x $(LOCALBIN)/scw
+	$(LOCALBIN)/scw init
+
 .PHONY: golang
 golang: /usr/local/go$(GOLANG_VERSION) $(GOPATH)
 
@@ -114,3 +121,7 @@ $(GOBIN)/jsonnet: golang
 	go install github.com/google/go-jsonnet/cmd/jsonnet@$(JSONNET_VERSION)
 	go install github.com/google/go-jsonnet/cmd/jsonnetfmt@$(JSONNET_VERSION)
 	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@$(JSONNET_VERSION)
+
+
+$(GOBIN)/jb: golang
+	go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest

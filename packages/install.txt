@@ -56,5 +56,6 @@ xmodmap
 # yakuake
 
 chrome-gnome-shell
+gnome-shell-extension-appindicator
 gnome-shell-extension-gsconnect
 gnome-shell-extension-sound-output-device-chooser
