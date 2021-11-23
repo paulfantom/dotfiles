@@ -27,7 +27,8 @@ all: golang \
 	$(GOBIN)/promtool \
 	$(GOBIN)/amtool \
 	$(GOBIN)/jsonnet \
-	$(GOBIN)/jb  ## Install tools
+	$(GOBIN)/jb \
+	$(GOBIN)/yamlfmt ## Install tools
 
 $(LOCALBIN)/speedtest:
 	sudo wget -O $@ https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
@@ -122,6 +123,8 @@ $(GOBIN)/jsonnet: golang
 	go install github.com/google/go-jsonnet/cmd/jsonnetfmt@$(JSONNET_VERSION)
 	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@$(JSONNET_VERSION)
 
-
 $(GOBIN)/jb: golang
 	go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
+
+$(GOBIN)/yamlfmt: golang
+	go install -a github.com/miekg/yamlfmt@latest
