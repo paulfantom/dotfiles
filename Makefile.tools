@@ -24,6 +24,7 @@ all: golang \
 	$(LOCALBIN)/kind \
 	kubectl-plugins \
 	$(LOCALBIN)/scw \
+	$(HOME)/.local/bin/ggshield \
 	$(GOBIN)/promtool \
 	$(GOBIN)/amtool \
 	$(GOBIN)/jsonnet \
@@ -89,6 +90,9 @@ $(LOCALBIN)/scw:
 	sudo curl -o $(LOCALBIN)/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.4.0/scw-2.4.0-linux-x86_64"
 	sudo chmod +x $(LOCALBIN)/scw
 	$(LOCALBIN)/scw init
+
+$(HOME)/.local/bin/ggshield:
+	pip install ggshield
 
 .PHONY: golang
 golang: /usr/local/go$(GOLANG_VERSION) $(GOPATH)
