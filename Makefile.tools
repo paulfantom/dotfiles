@@ -2,7 +2,7 @@ SHELL=/bin/bash
 
 PROM_VERSION=2.31.1
 AM_VERSION=44f8adc06af5101ad64bd8b9c8b18273f2922051
-JSONNET_VERSION=51daeb3229e488ce4a57d16bcfd77b6de896d03c
+JSONNET_VERSION=0.18.0
 KIND_VERSION?=latest
 GIT_LFS_VERSION=2.5.2
 GOLANG_VERSION?=1.17
@@ -29,6 +29,7 @@ all: golang \
 	$(GOBIN)/amtool \
 	$(GOBIN)/jsonnet \
 	$(GOBIN)/jb \
+	$(GOBIN)/kubeseal \
 	$(GOBIN)/yamlfmt ## Install tools
 
 $(LOCALBIN)/speedtest:
@@ -110,6 +111,8 @@ $(GOPATH):
 	-sudo unlink "/usr/local/go"
 	sudo ln -snf "/usr/local/go$(GOLANG_VERSION)" "/usr/local/go"
 
+.PHONY: promtool
+promtool: $(GOBIN)/promtool
 $(GOBIN)/promtool:
 	# go install github.com/prometheus/prometheus/cmd/promtool@$(PROM_VERSION)
 	rm -rf /tmp/prometheus
@@ -119,16 +122,30 @@ $(GOBIN)/promtool:
 	mv -u "/tmp/prometheus/prometheus-$(PROM_VERSION).linux-amd64/promtool" "$(GOBIN)/promtool"
 	chmod +x "$(GOBIN)/promtool"
 
+.PHONY: amtool
+amtool: $(GOBIN)/amtool
 $(GOBIN)/amtool: golang
 	go install github.com/prometheus/alertmanager/cmd/amtool@$(AM_VERSION)
 
+.PHONY: jsonnet
+jsonnet: $(GOBIN)/jsonnet
 $(GOBIN)/jsonnet: golang
-	go install github.com/google/go-jsonnet/cmd/jsonnet@$(JSONNET_VERSION)
-	go install github.com/google/go-jsonnet/cmd/jsonnetfmt@$(JSONNET_VERSION)
-	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@$(JSONNET_VERSION)
+	go install github.com/google/go-jsonnet/cmd/jsonnet@v$(JSONNET_VERSION)
+	go install github.com/google/go-jsonnet/cmd/jsonnetfmt@v$(JSONNET_VERSION)
+	go install github.com/google/go-jsonnet/cmd/jsonnet-lint@v$(JSONNET_VERSION)
 
+.PHONY: jb
+jb: $(GOBIN)/jb
 $(GOBIN)/jb: golang
 	go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
 
+.PHONY: kubeseal
+kubeseal: $(GOBIN)/kubeseal
+$(GOBIN)/kubeseal: golang
+	go install -a github.com/bitnami-labs/sealed-secrets/cmd/kubeseal@latest
+
+.PHONY: yamlfmt
+yamlfmt: $(GOBIN)/yamlfmt
 $(GOBIN)/yamlfmt: golang
 	go install -a github.com/devopyio/yamlfmt@latest
+

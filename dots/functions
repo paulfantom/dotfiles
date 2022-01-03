@@ -254,7 +254,7 @@ function scw-stop-all() {
 
 function drain-reboot() {
 	local host="$1"
-	kubectl drain "${host}" --ignore-daemonsets --delete-emptydir-data
+	kubectl drain "${host}" --ignore-daemonsets --delete-emptydir-data --grace-period=5
 	ssh "${host}" sudo reboot
 	sleep 60
 	echo -n "Waiting for node ${host} to come back."
