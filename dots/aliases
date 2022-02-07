@@ -15,10 +15,6 @@ alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="sudo ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'"
 alias ips="sudo ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
-# Work-related
-alias whatidid='vim $HOME/.whatidid'
-alias retro='vim $HOME/.retro'
-
 # Home PCs
 alias gamingpc="wol 24:4b:fe:89:cf:ab"
 alias aduspc="wol d0:50:99:9a:f5:8c"

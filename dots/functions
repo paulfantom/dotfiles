@@ -270,3 +270,13 @@ function drain-reboot() {
 	echo "DONE"
 	kubectl uncordon "${host}"
 }
+
+htop() {
+	echo "Did you mean to use 'below'? [y/n]"
+	read REPLY
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		/usr/bin/below
+	else
+		/usr/bin/htop
+	fi
+}
