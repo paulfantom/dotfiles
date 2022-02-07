@@ -1,0 +1,9 @@
+[Unit]
+Description=Music Player Daemon
+
+[Service]
+ExecStart=/usr/local/bin/onair.sh
+EnvironmentFile=/home/paulfantom/.secrets/homeassistant
+
+[Install]
+WantedBy=default.target

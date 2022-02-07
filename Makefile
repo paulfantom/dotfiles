@@ -2,6 +2,7 @@ SHELL := /bin/bash
 
 DOTFILES=$(shell find "$(CURDIR)/dots" -name "*" -type f -printf "$(HOME)/.%P\n")
 BINSCRIPTS=$(shell find $(CURDIR)/bin -type f -printf "/usr/local/bin/%P\n")
+SYSTEMDUNITS=$(shell find $(CURDIR)/systemd -type f -printf "$(HOME)/.config/systemd/user/%P\n")
 APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*" -type f | sed -e "s|$(CURDIR)\/app|$(HOME)/.|")
 ETCFILES=$(shell find $(CURDIR)/etc -type f | sed -e 's|$(CURDIR)||')
 
@@ -32,7 +33,6 @@ $(HOME)/.oh-my-zsh:
 zsh-completions: $(HOME)/.oh-my-zsh/completions  ## Install or update zsh completion scripts
 	wget -O $(HOME)/.oh-my-zsh/completions/_kubectx.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubectx.zsh
 	wget -O $(HOME)/.oh-my-zsh/completions/_kubens.zsh https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubens.zsh
-
 
 $(HOME)/.oh-my-zsh/completions: $(HOME)/.oh-my-zsh
 	mkdir -p $(HOME)/.oh-my-zsh/completions
@@ -66,6 +66,12 @@ account:  ## Configure user account groups and sudo access
 bin: $(BINSCRIPTS)  ## Install bin directory files.
 $(BINSCRIPTS):
 	sudo ln -sf $(CURDIR)/bin/$(shell basename $@) $@
+
+.PHONY: systemd
+systemd: $(SYSTEMDUNITS)  ## Install systemd unit files for user.
+$(SYSTEMDUNITS):
+	sudo ln -sf $(CURDIR)/systemd/$(shell basename $@) $@
+	systemctl daemon-reload --user
 
 .PHONY: dotfiles
 dotfiles: $(DOTFILES)  ## Install dotfiles.
