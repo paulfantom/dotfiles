@@ -18,3 +18,7 @@ alias ips="sudo ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-
 # Home PCs
 alias gamingpc="wol 24:4b:fe:89:cf:ab"
 alias aduspc="wol d0:50:99:9a:f5:8c"
+
+# AWS
+alias aws-reset="unset AWS_ACCESS_KEY_ID AWS_SESSION_TOKEN AWS_SECRET_ACCESS_KEY"
+

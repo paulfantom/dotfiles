@@ -5,7 +5,7 @@ AM_VERSION=44f8adc06af5101ad64bd8b9c8b18273f2922051
 JSONNET_VERSION=0.18.0
 KIND_VERSION?=latest
 GIT_LFS_VERSION=2.5.2
-GOLANG_VERSION?=1.17
+GOLANG_VERSION?=1.20
 KREW_PLUGINS=$(shell cat $(CURDIR)/packages/kubernetes-krew-plugins)
 
 LOCALBIN=/usr/local/bin
@@ -53,7 +53,7 @@ $(LOCALBIN)/git-lfs:
 .PHONY: tuptime
 tuptime: /usr/bin/tuptime /etc/systemd/system/tuptime-cron.service /etc/systemd/system/tuptime-cron.timer
 /usr/bin/tuptime:
-	sudo wget -O $@ https://raw.githubusercontent.com/rfrail3/tuptime/master/src/tuptime
+	sudo wget -O $@ https://raw.githubusercontent.com/rfmoz/tuptime/master/src/tuptime
 	sudo chmod +x $@
 
 /etc/systemd/system/tuptime-cron.service: /usr/bin/tuptime
@@ -84,13 +84,14 @@ $(HOME)/.krew/bin/kubectl-krew: $(LOCALBIN)/kubectl
 .PHONY: kubectl-plugins
 kubectl-plugins: $(HOME)/.krew/bin/kubectl-krew $(LOCALBIN)/kubectl
 	$(LOCALBIN)/kubectl krew install $(KREW_PLUGINS)
-	sudo ln -s $(HOME)/.krew/bin/kubectl-ns /usr/local/bin/kubens
-	sudo ln -s $(HOME)/.krew/bin/kubectl-ctx /usr/local/bin/kubectx
+	$(MAKE) /usr/local/bin/kubens
+	$(MAKE) /usr/local/bin/kubectx
 
-$(LOCALBIN)/scw:
-	sudo curl -o $(LOCALBIN)/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v2.4.0/scw-2.4.0-linux-x86_64"
-	sudo chmod +x $(LOCALBIN)/scw
-	$(LOCALBIN)/scw init
+/usr/local/bin/kubens:
+	sudo ln -s $(HOME)/.krew/bin/kubectl-ns /usr/local/bin/kubens
+
+/usr/local/bin/kubectx:
+	sudo ln -s $(HOME)/.krew/bin/kubectl-ctx /usr/local/bin/kubectx
 
 $(HOME)/.local/bin/ggshield:
 	pip install ggshield

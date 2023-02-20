@@ -213,56 +213,17 @@ e2e() {
 	make test-e2e
 }
 
-function scw-start() {
-	local name="$1"
-	ID=$(scw k8s cluster create name="${name}" --output json | jq -r '.id')
-	echo "Created cluster with ID: ${ID}"
-	echo -n 'Waiting for cluster start...'
-	while [ "$(scw k8s cluster get "${ID}" -o json | jq -r '.status')" != "pool_required" ]; do
-		echo -n '.'
-		sleep 1
-	done
-	echo " DONE"
-
-	scw k8s pool create cluster-id="${ID}" name="basic" node-type="GP1_XS" size=3 &>/dev/null
-	echo -n 'Waiting for node pool...'
-	while [ "$(scw k8s cluster get "${ID}" -o json | jq -r '.pools[0].status')" != "ready" ]; do
-		echo -n '.'
-		sleep 1
-	done
-	echo " DONE"
-
-	scw k8s cluster get "${ID}"
-
-	scw k8s kubeconfig install "${ID}"
-
-	kubectl get pods -A
-}
-
-function scw-stop-all() {
-	for id in $(scw k8s cluster list -o json | jq -r '.[].id'); do
-		scw k8s kubeconfig uninstall "${id}"
-		scw k8s cluster delete "${id}" with-additional-resources=true
-		echo -n "Deleting cluster with id ${id}..."
-		while scw k8s cluster get "${id}" &>/dev/null; do
-			echo -n '.'
-			sleep 1
-		done
-		echo "DONE"
-	done
-}
-
 function drain-reboot() {
 	local host="$1"
 	kubectl drain "${host}" --ignore-daemonsets --delete-emptydir-data --grace-period=5
 	ssh "${host}" sudo reboot
-	sleep 60
 	echo -n "Waiting for node ${host} to come back."
-	while ping -c 1 "${host}" &>/dev/null; do
+	sleep 100
+	while !ping -c 1 "${hostip}" &>/dev/null; do
 		echo -n '.'
 		sleep 1
 	done
-	echo "DONE"
+	echo "Host ${host} is back"
 	echo -n "Waiting for node ${host} to become Ready."
 	while !kubectl wait --for=condition=ready --timeout=5s node "${host}" &>/dev/null; do
 		echo -n '.'
