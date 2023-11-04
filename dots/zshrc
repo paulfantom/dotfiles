@@ -84,7 +84,7 @@ plugins=(
   github
   helm
   kube-ps1
-  ssh-agent
+  kubectl
   systemadmin
   terraform
   zsh-interactive-cd
@@ -111,12 +111,29 @@ zstyle ':completion:*:ssh:*' hosts on
 secrets-load
 
 # check if there is newer kernel installed
-checkkernel
+#checkkernel
 
 # ensure proper xmodmap mapping
-(xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"
+#(xmodmap | grep locka &>/dev/null) || xmodmap "$HOME/.Xmodmap"
 
 # Show what I need to do next
 #todo
 
 
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
+source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+
+export PATH=$PATH:/Users/paulfantom/.kubescape/bin:/Users/paulfantom/Library/Python/3.11/bin
+
+kubectx -u &>/dev/null
+# kubens default

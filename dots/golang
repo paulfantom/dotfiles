@@ -1,12 +1,7 @@
-export GO111MODULE=on
-export GOROOT=/usr/local/go
-export PATH=${PATH}:/usr/local/go/bin:${HOME}/.local/bin
-
 # go path
 export GOPATH="${HOME}/Projects"
 
-# update path
-export PATH=/usr/local/bin:/usr/local/go/bin:${PATH}:${GOPATH}/bin:/sbin
+export PATH=${HOME}/.local/bin:${GOPATH}/bin:${PATH}
 
 export CDPATH=${CDPATH}:$GOPATH/src/github.com:$GOPATH/src/golang.org:$GOPATH/src
 

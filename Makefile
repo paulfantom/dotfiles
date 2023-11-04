@@ -1,10 +1,10 @@
 SHELL := /bin/bash
 
-DOTFILES=$(shell find "$(CURDIR)/dots" -name "*" -type f -printf "$(HOME)/.%P\n")
-BINSCRIPTS=$(shell find $(CURDIR)/bin -type f -printf "/usr/local/bin/%P\n")
-SYSTEMDUNITS=$(shell find $(CURDIR)/systemd -type f -printf "$(HOME)/.config/systemd/user/%P\n")
-APPCONFIG=$(shell find $(CURDIR)/appconfig -name "*" -type f | sed -e "s|$(CURDIR)\/app|$(HOME)/.|")
-ETCFILES=$(shell find $(CURDIR)/etc -type f | sed -e 's|$(CURDIR)||')
+DOTFILES=$(shell gfind "$(CURDIR)/dots" -name "*" -type f -printf "$(HOME)/.%P\n")
+BINSCRIPTS=$(shell gfind $(CURDIR)/bin -type f -printf "/usr/local/bin/%P\n")
+SYSTEMDUNITS=$(shell gfind $(CURDIR)/systemd -type f -printf "$(HOME)/.config/systemd/user/%P\n")
+APPCONFIG=$(shell gfind $(CURDIR)/appconfig -name "*" -type f | sed -e "s|$(CURDIR)\/app|$(HOME)/.|")
+ETCFILES=$(shell gfind $(CURDIR)/etc -type f | sed -e 's|$(CURDIR)||')
 
 .PHONY: all
 all: bin install dotfiles zsh gpg appconfig vim etc tools ## Installs the bin and etc directory files and the dotfiles.
@@ -48,8 +48,8 @@ gpg:  ## Reconfiugure gpg agent
 vim:  ## Install and configure VIM
 	ln -snf $(CURDIR)/vim $(HOME)/.vim;
 	ln -snf $(CURDIR)/vim/vimrc $(HOME)/.vimrc;
-	sudo ln -snf $(CURDIR)/vim /root/.vim;
-	sudo ln -snf $(CURDIR)/vim/vimrc /root/.vimrc;
+	-sudo ln -snf $(CURDIR)/vim /root/.vim;
+	-sudo ln -snf $(CURDIR)/vim/vimrc /root/.vimrc;
 	git submodule update --init --recursive
 	git submodule foreach git pull --recurse-submodules origin master
 
@@ -110,7 +110,7 @@ fonts: /usr/share/fonts/comicmono
 test: shellcheck ## Run all the tests on the files in the repository.
 
 .PHONY: shellcheck
-shellcheck: $(shell find $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-shell ; then echo "$${in}" ; fi ; done)  ## Runs shellcheck tests on the scripts.
+shellcheck: $(shell gfind $(CURDIR) -type f -not -iwholename '*.git*' -not -iwholename '*/.vim/pack/default/start/*' | while read in ; do if file -i "$${in}" | grep -q x-shell ; then echo "$${in}" ; fi ; done)  ## Runs shellcheck tests on the scripts.
 	shellcheck --format=gcc $^
 
 .PHONY: help

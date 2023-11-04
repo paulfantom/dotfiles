@@ -104,7 +104,8 @@ function secrets-load() {
 	local secrets_file="$HOME/.secrets/shell_vars"
 	local staleness_period=3888000  # 45 days
 	if [ -f "$secrets_file" ]; then
-		last_mod=$(date +%s -r "$secrets_file")
+		#last_mod=$(date +%s -r "$secrets_file")
+		last_mod=$(stat -f %m "$secrets_file")
 		if [ "$((last_mod + staleness_period))" -gt "$(date +%s)" ]; then
 			# shellcheck source=/dev/null
 			source "$secrets_file"
@@ -230,16 +231,6 @@ function drain-reboot() {
 	done
 	echo "DONE"
 	kubectl uncordon "${host}"
-}
-
-function htop() {
-	echo "Did you mean to use 'below'? [y/n]"
-	read REPLY
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		/usr/bin/below
-	else
-		/usr/bin/htop
-	fi
 }
 
 function speakers() {

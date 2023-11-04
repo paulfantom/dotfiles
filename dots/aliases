@@ -3,7 +3,7 @@
 
 alias vi="vim"
 alias mtr='mtr -o "LRDS N BAW" '
-alias diff="colordiff"
+#alias diff="colordiff"
 alias lsd='ls --group-directories-first'
 alias nmon='NMON="cmtu" nmon'
 alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
@@ -22,3 +22,5 @@ alias aduspc="wol d0:50:99:9a:f5:8c"
 # AWS
 alias aws-reset="unset AWS_ACCESS_KEY_ID AWS_SESSION_TOKEN AWS_SECRET_ACCESS_KEY"
 
+# AVS
+alias avs-proxy="ssh -D 8080 avs-bastion"

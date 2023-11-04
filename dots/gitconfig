@@ -147,11 +147,8 @@
         name = paulfantom
         signingkey = 0x12AE0185401674E7
 
-[includeIf "gitdir:~/Projects/redhat/"]
-        path = .gitconfig-work
-
-[includeIf "gitdir:~/Projects/go/src/github.com/openshift"]
-        path = .gitconfig-work
+[includeIf "gitdir:~/Projects/src/avsystem.gitlab.com/"]
+        path = ~/.gitconfig-work
 
 [commit]
         gpgsign = false
