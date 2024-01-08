@@ -1,30 +1,37 @@
 #!/bin/sh
 
 # Install software using brew
+set -euo pipefail
 
 # GUI software
-brew install --cask rectangle arc MonitorControl steam signal
+brew install --cask \
+    rectangle \
+    arc \
+    MonitorControl \
+    steam \
+    signal \
+    logitech-options
 
 # Basic software
 brew install \
-    strace \
-    convert \
     wakeonlan \
     yq \
     git-lfs \
     golang
+
+git lfs install
 
 # Infra-as-code
 brew install \
     terraform \
     terragrunt \
     ansible \
+    ansible-lint \
     molecule
 
 # Monitoring tools
 brew install \
     prometheus \
-    alertmanager \
     pint \
     jsonnet \
     jsonnet-bundler \
@@ -32,6 +39,9 @@ brew install \
 
 # Kubernetes
 brew install \
+    kubernetes-cli \
+    krew \
+    helm \
     istioctl \
     cilium-cli \
     pluto \
@@ -39,16 +49,14 @@ brew install \
     argocd \
     derailed/popeye/popeye \
     kind \
-    chart-testing
+    chart-testing \
+    rancher-cli
 
 # Cloud tools
 brew install \
-    aksctl \
     awscli \
     azure-cli \
-    gcloud \
-    gke-gcloud-auth-plugin \
-    gkectl
+    google-cloud-sdk
 
 # Others
 brew install \
