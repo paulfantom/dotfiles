@@ -145,15 +145,16 @@
 [user]
 	email = pawel@krupa.net.pl
         name = paulfantom
-        signingkey = 0x12AE0185401674E7
+        signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC/63CQz9m4DHvowZKu5/Rlczv1yUxMy25qEJ9WWG8kmJFwzwSYdnZpfQqWINZoAKo1aJuusbrrwrsCSsXS2UboI6UmZD6QXksv4CbdoQxjEmgGTyXaeLCdHqBDt7VLyxN8sQ8LBENHyQywlpfXQC3iV+QoM3DrYsnSML50WrhvRwaump7DkwbL1s3Gv3apZD0AAsxu5EwTzjd1WWIiIaYCeUe6lbhwXTTOsfmWLFMptNtDBvR3CqoV1GC4u3roh66sM3/brR2PJ7FXgt+kafpjL6IYOTsOSaLGuvxccqPVZuHKPM+8dYqybTPslK9qt3cwJ+Kz4afpVeHDIgCxxq4Z0QlKR6NZ7qtpSRFPYAya71kj/zGhLeafgmZ2flglzPiQ2+GC/Gzh2TJFY5kka1ce3zGRFgA/RE52Qgq0i0bukHrreve6YL109uCta+RiCfVvFEnPHeEY2OEPOOixZd3v4R+vbaXB8xwNM3faMo038qzmNUDHT5CJ7sJib6us9kJpTq1n/XNObIklCe0MfGrMPhDrBuf7XTPxm4H1ljgHckw/zVhvgkyyX7M9CCE3SlDHrL+gdOoILoFEG8ePMOd6ObirJg9DFlWEyIQ25DeYJHdo0mV03OWnQQVL2nI5AItDrGlH47N2vliD1Ffo7DlLq4m1Cx2z+PmUH89FrIuIcw== 
 
 [includeIf "gitdir:~/Projects/src/avsystem.gitlab.com/"]
         path = ~/.gitconfig-work
 
 [commit]
-        gpgsign = false
+        gpgsign = true
 [gpg]
-        program = gpg2
+        format = ssh
+
 [filter "lfs"]
         clean = git-lfs clean -- %f
         smudge = git-lfs smudge -- %f
@@ -165,3 +166,9 @@
 	ff = only
 [init]
 	defaultBranch = main
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

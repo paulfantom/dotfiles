@@ -4,12 +4,3 @@ export GOPATH="${HOME}/Projects"
 export PATH=${HOME}/.local/bin:${GOPATH}/bin:${PATH}
 
 export CDPATH=${CDPATH}:$GOPATH/src/github.com:$GOPATH/src/golang.org:$GOPATH/src
-
-alias goland="/opt/GoLand/bin/goland.sh"
-
-alias go13="/usr/local/go-1.13/bin/go"
-alias go14="/usr/local/go-1.14/bin/go"
-alias go15="/usr/local/go-1.15/bin/go"
-alias go16="/usr/local/go-1.16/bin/go"
-alias go17="/usr/local/go-1.17/bin/go"
-

@@ -1,26 +1,6 @@
 #!/bin/bash
 # -- EXPORTS --
-export KUBECONFIG="${HOME}/.kube/config"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-
-# -- AUTOCOMPLETIONS --
-CURSHELL=bash
-if [ -n "${ZSH}" ]; then
-	CURSHELL="zsh"
-fi
-if command -v kubectl &>/dev/null; then
-	# shellcheck source=/dev/null
-	source <(kubectl completion "${CURSHELL}")
-	if [ "${CURSHELL}" = "bash" ]; then
-		complete -F __start_kubectl k
-		complete -F __start_kubectl kubectl
-	fi
-fi
-
-if command -v kind &>/dev/null; then
-	# shellcheck source=/dev/null
-	source <(kind completion "${CURSHELL}")
-fi
 
 #if command -v kubecolor &>/dev/null; then
 #  alias kubectl="kubecolor"
@@ -34,7 +14,6 @@ fi
 alias k=kubectl
 
 alias konfig="kubectl konfig"
-alias kube-lint="kube-linter lint"
 alias kube-import="kubectl konfig import"
 
 # -- FUNCTIONS --
@@ -42,9 +21,4 @@ alias kube-import="kubectl konfig import"
 # TODO: kubectl plugin ?
 function k8s-show-image() {
 	kubectl get pods --all-namespaces -l app="${1}" -ojsonpath="{.items[*].spec.containers[?(@.name==\"$1\")].image}"
-}
-
-# TODO: kubectl plugin?
-function k8s-po-show-rules() {
-	kubectl -n prometheus-operator-e2e-tests exec -it prometheus-test-0 -c prometheus '/bin/sh -c "cat /etc/prometheus/rules/rules-0/test.rules"'
 }

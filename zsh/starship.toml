@@ -1,0 +1,96 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Port of zsh/themes/paulfantom.zsh-theme
+add_newline = false
+
+# line 1: dashed separator; line 2: dir (git) »
+format = '''
+$fill
+$directory([ \(](fg:75)$git_branch$git_status[\)](fg:75)) $character'''
+
+# right: duration, exit code, k8s context:namespace, user@host
+right_format = '$cmd_duration$status$kubernetes$gcloud$username$hostname'
+
+continuation_prompt = '[\\ ](red)'
+
+[fill]
+symbol = '-'
+style = 'fg:237'
+
+[directory]
+style = 'fg:32'
+format = '[$path]($style)[$read_only]($read_only_style)'
+truncation_length = 3
+truncation_symbol = '.../'
+truncate_to_repo = false
+
+[git_branch]
+style = 'fg:78'
+format = '[$branch]($style)'
+
+[git_status]
+style = 'fg:214'
+format = '([$all_status$ahead_behind]($style))'
+
+[character]
+success_symbol = '[»](fg:105)'
+error_symbol = '[»](fg:105)'
+
+[cmd_duration]
+style = 'fg:244'
+format = '[$duration]($style) '
+
+[status]
+disabled = false
+style = 'red'
+format = '[$status ↵]($style) '
+
+[kubernetes]
+disabled = false
+style = 'fg:110'
+format = '\([$context]($style)(:[$namespace](cyan))\) '
+
+# First match wins. Production contexts: bold white on red.
+[[kubernetes.contexts]]
+context_pattern = 'gke_[^_]*prod[^_]*_[^_]+_(?P<cluster>.+)'
+context_alias = '$cluster'
+style = 'bold white bg:red'
+
+[[kubernetes.contexts]]
+context_pattern = 'gke_[^_]+_[^_]+_(?P<cluster>cdm-us|linkyfi-eu|linkyfi-asia|linkyfi-uva)'
+context_alias = '$cluster'
+style = 'bold white bg:red'
+
+[[kubernetes.contexts]]
+context_pattern = 'arn:aws:eks:[^:]+:\d+:cluster/(?P<cluster>.*prod.*)'
+context_alias = '$cluster'
+style = 'bold white bg:red'
+
+[[kubernetes.contexts]]
+context_pattern = '.*prod.*|kubered'
+style = 'bold white bg:red'
+
+# Shorten everything else: gke_<project>_<location>_<cluster> and EKS ARNs
+[[kubernetes.contexts]]
+context_pattern = 'gke_[^_]+_[^_]+_(?P<cluster>.+)'
+context_alias = '$cluster'
+
+[[kubernetes.contexts]]
+context_pattern = 'arn:aws:eks:[^:]+:\d+:cluster/(?P<cluster>.+)'
+context_alias = '$cluster'
+
+[gcloud]
+symbol = 'gcp:'
+style = 'fg:68'
+format = '[$symbol$project]($style) '
+
+[username]
+show_always = true
+style_user = 'fg:237'
+style_root = 'red'
+format = '[$user]($style)'
+
+[hostname]
+ssh_only = false
+style = 'fg:237'
+format = '[@$hostname]($style)'

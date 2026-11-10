@@ -4,11 +4,6 @@
 alias vi="vim"
 alias mtr='mtr -o "LRDS N BAW" '
 #alias diff="colordiff"
-alias lsd='ls --group-directories-first'
-alias nmon='NMON="cmtu" nmon'
-alias lock="qdbus org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.Lock"
-alias afk="qdbus org.freedesktop.ScreenSaver /org/freedesktop/ScreenSaver Lock"
-alias ocat='/usr/bin/cat'  # TODO: check if still needed
 
 # IP addresses
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -24,3 +19,8 @@ alias aws-reset="unset AWS_ACCESS_KEY_ID AWS_SESSION_TOKEN AWS_SECRET_ACCESS_KEY
 
 # AVS
 alias avs-proxy="ssh -D 8080 avs-bastion"
+
+# K8S
+# kubeswitch (per-shell context): kctx, kctx <name>, kctx -, kns, kns <name>
+alias kctx=switch
+alias kns='switch ns'

@@ -40,3 +40,6 @@ checkkernel
 
 # Show what I need to do next
 todo
+
+# Added by Orbit local CLI installer
+export PATH="$HOME/.local/bin:$PATH"

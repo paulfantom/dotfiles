@@ -1,14 +1,6 @@
 #!/bin/bash
 # shellcheck source=/dev/null
 
-new-alias() {
-	local last_cmd
-	# shellcheck disable=SC2001
-	last_cmd=$(history | tail -n2 | head -n1 | sed 's/[0-9]* //')
-	echo alias "$1='""$last_cmd""'" >>~/.new_aliases
-	source "$HOME/.new_aliases"
-}
-
 extract() {
 	if [ -f "$1" ]; then
 		case $1 in
@@ -27,16 +19,6 @@ extract() {
 		esac
 	else
 		echo "'$1' is not a valid file"
-	fi
-}
-
-checkkernel() {
-	MSG="\e[1m\e[5m\e[31mALERT! \e[25mReboot system to apply crucial security updates.\e[0m"
-	if [ -f /var/run/reboot-required ]; then
-		echo -e "$MSG"
-	fi
-	if [ "$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)" != "$(uname -r)" ]; then
-		echo -e "$MSG"
 	fi
 }
 
@@ -115,34 +97,6 @@ function secrets-load() {
 	fi
 }
 
-function monitor() {
-	local COMMAND="xrandr --output eDP1 --mode 1920x1080 "
-	local PARAMS
-	case "$1" in
-	"lg") PARAMS="--output DP1 --mode 3440x1440 --right-of eDP1" ;;
-	"projector") PARAMS="--output HDMI1 --mode 1920x1080 --right-of eDP1" ;;
-	"reset") PARAMS="--output DP1 --off --output HDMI1 --off" ;;
-	esac
-
-	if [ "$PARAMS" = "" ]; then
-		echo "Subcommand not found. Screen configuration is not reloaded."
-		return 1
-	fi
-	
-	echo "Setting up screens configuration"
-	eval "${COMMAND} ${PARAMS}"
-	echo "Re-applying screen configuration in 5 second..."
-	sleep 5
-	eval "${COMMAND} ${PARAMS}"
-}
-complete -W "projector lg reset" monitor
-
-function buildx-init() {
-	docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3
-	docker buildx create --name mybuilder --use
-	docker buildx inspect --bootstrap
-}
-
 function buildx-cross() {
 	local image=${1}
 	for arch in amd64 arm64 arm; do
@@ -170,89 +124,8 @@ function image-manifest() {
 	docker manifest push "${img}"
 }
 
-# TODO: Check if still needed. Consider moving to kube-prometheus or tobs
-wrap() {
-local where="${1}"
-local name="${2}"
-	
-cat << EOF
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  labels:
-    prometheus: k8s
-    role: alert-rules
-  name: ${name}
-  namespace: monitoring
-spec:
-$(sed 's/^/  /' < "${where}")
-EOF
-}
-
 diffyaml() {
   yamldiff --file1 "${1}" --file2 "${2}"
-}
-
-# TODO: Improve and move to prometheus-operator repo
-e2e() {
-	if [ "$(basename "$(pwd)")" != "prometheus-operator" ]; then
-		echo "Not in prometheus-operator directory"
-		return
-	fi
-	kind delete cluster
-	kind create cluster
-	export KUBECONFIG
-	KUBECONFIG="$(kind get kubeconfig-path)"
-	make image
-	for n in "operator" "config-reloader"; do
-		kind load docker-image "quay.io/coreos/prometheus-$n:$(git rev-parse --short HEAD)"
-	done
-	until [ "$(kubectl get pods -n kube-system --field-selector=status.phase==Running | wc -l )" -eq 9 ]; do
-		echo "Waiting for cluster to finish bootstraping"
-		sleep 5
-	done
-	make test-e2e
-}
-
-function drain-reboot() {
-	local host="$1"
-	kubectl drain "${host}" --ignore-daemonsets --delete-emptydir-data --grace-period=5
-	ssh "${host}" sudo reboot
-	echo -n "Waiting for node ${host} to come back."
-	sleep 100
-	while !ping -c 1 "${hostip}" &>/dev/null; do
-		echo -n '.'
-		sleep 1
-	done
-	echo "Host ${host} is back"
-	echo -n "Waiting for node ${host} to become Ready."
-	while !kubectl wait --for=condition=ready --timeout=5s node "${host}" &>/dev/null; do
-		echo -n '.'
-	done
-	echo "DONE"
-	kubectl uncordon "${host}"
-}
-
-function speakers() {
-	source "${HOME}/.secrets/homeassistant"
-	HOMEASSISTANT_SPEAKERS="input_select.speakers"
-
-	local input
-	case "${1}" in
-		"on") input="opt/coax";;
-		"off") input="line1/2";;
-		*)
-			echo "Incorrect value. Only [on/off] are supported."
-			exit 1
-		;;
-	esac
-	echo "Set speakers to ${input}"
-
-	curl -k -X POST \
-		-H "Authorization: Bearer ${HOMEASSISTANT_TOKEN}" \
-		-H "Content-Type: application/json" \
-		-d "{\"entity_id\": \"${HOMEASSISTANT_SPEAKERS}\", \"option\": \"${input}\"}" \
-		"${HOMEASSISTANT_ADDR}/api/services/input_select/select_option" &>/dev/null
 }
 
 function blinds() {

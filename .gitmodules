@@ -1,9 +1,4 @@
-[submodule "vim/pack/default/start/vim-jinja"]
-	path = vim/pack/default/start/vim-jinja
-	url = https://github.com/lepture/vim-jinja.git
-[submodule "vim/pack/default/start/vim-polyglot"]
-	path = vim/pack/default/start/vim-polyglot
-	url = https://github.com/sheerun/vim-polyglot.git
-[submodule "vim/pack/default/start/ale"]
-	path = vim/pack/default/start/ale
-	url = https://github.com/w0rp/ale.git
+[submodule "zsh/plugins/fzf-tab"]
+	path = zsh/plugins/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git
+	shallow = true
